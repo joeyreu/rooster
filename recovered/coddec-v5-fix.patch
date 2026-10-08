@@ -1,0 +1,11 @@
+diff --git a/src/net/rim/tools/compiler/codfile/DataSection.java b/src/net/rim/tools/compiler/codfile/DataSection.java
+--- a/src/net/rim/tools/compiler/codfile/DataSection.java
++++ b/src/net/rim/tools/compiler/codfile/DataSection.java
+@@
+         z_eNZ = flag;
+         _Flags = __input.readUnsignedByte() & 0x37;
+         _Version = __input.readUnsignedByte();
++        // The constructor seeds the parser as version 6. Reset this flag from
++        // the actual data-section version before selecting the v6 layout.
++        _isVersion6 = false;
+         z_eYZ = false;
