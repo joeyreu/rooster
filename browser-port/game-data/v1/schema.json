@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rooster.invalid/game-data/v1/schema.json",
+  "title": "Rooster portable game-data bundle v1",
+  "$comment": "Validate the aggregate produced by merging levels.json with atlases.json; the TypeScript loader performs this merge and additional referential checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "rules", "levels", "atlases"],
+  "properties": {
+    "version": { "const": 1 },
+    "rules": { "$ref": "#/$defs/rules" },
+    "levels": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/level" }
+    },
+    "atlases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/atlas" }
+    }
+  },
+  "$defs": {
+    "positiveInteger": { "type": "integer", "minimum": 1 },
+    "nonNegativeInteger": { "type": "integer", "minimum": 0 },
+    "uint32": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "$ref": "#/$defs/positiveInteger" },
+        "height": { "$ref": "#/$defs/positiveInteger" }
+      }
+    },
+    "rectangle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "$ref": "#/$defs/nonNegativeInteger" },
+        "y": { "$ref": "#/$defs/nonNegativeInteger" },
+        "width": { "$ref": "#/$defs/positiveInteger" },
+        "height": { "$ref": "#/$defs/positiveInteger" }
+      }
+    },
+    "pickup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "assetId",
+        "atlasId",
+        "presencePercent",
+        "effect",
+        "message"
+      ],
+      "properties": {
+        "id": { "enum": ["life", "speed", "counter"] },
+        "assetId": { "type": "string", "minLength": 1 },
+        "atlasId": { "type": "string", "minLength": 1 },
+        "presencePercent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "effect": {
+          "enum": [
+            "addSpareLife",
+            "setBoostedSpeed",
+            "addTrafficRemaining"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "bonus": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max"],
+          "properties": {
+            "min": { "$ref": "#/$defs/nonNegativeInteger" },
+            "max": { "$ref": "#/$defs/nonNegativeInteger" }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tickMilliseconds",
+        "viewport",
+        "rowHeight",
+        "camera",
+        "player",
+        "traffic",
+        "obstacles",
+        "pickups",
+        "pickupPlacement",
+        "transitions",
+        "rng"
+      ],
+      "properties": {
+        "tickMilliseconds": { "$ref": "#/$defs/positiveInteger" },
+        "viewport": { "$ref": "#/$defs/size" },
+        "rowHeight": { "$ref": "#/$defs/positiveInteger" },
+        "camera": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["followY", "respawnPanPixelsPerTick"],
+          "properties": {
+            "followY": { "$ref": "#/$defs/nonNegativeInteger" },
+            "respawnPanPixelsPerTick": {
+              "$ref": "#/$defs/positiveInteger"
+            }
+          }
+        },
+        "player": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "width",
+            "height",
+            "spawnX",
+            "normalSpeed",
+            "boostedSpeed",
+            "initialSpareLives",
+            "collision"
+          ],
+          "properties": {
+            "width": { "$ref": "#/$defs/positiveInteger" },
+            "height": { "$ref": "#/$defs/positiveInteger" },
+            "spawnX": { "$ref": "#/$defs/nonNegativeInteger" },
+            "normalSpeed": { "$ref": "#/$defs/positiveInteger" },
+            "boostedSpeed": { "$ref": "#/$defs/positiveInteger" },
+            "initialSpareLives": {
+              "$ref": "#/$defs/nonNegativeInteger"
+            },
+            "collision": { "$ref": "#/$defs/rectangle" }
+          }
+        },
+        "traffic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["poolSize", "warmupTicks", "height", "collisionInsets"],
+          "properties": {
+            "poolSize": { "$ref": "#/$defs/positiveInteger" },
+            "warmupTicks": { "$ref": "#/$defs/nonNegativeInteger" },
+            "height": { "$ref": "#/$defs/positiveInteger" },
+            "collisionInsets": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["left", "top", "right", "bottom"],
+              "properties": {
+                "left": { "$ref": "#/$defs/nonNegativeInteger" },
+                "top": { "$ref": "#/$defs/nonNegativeInteger" },
+                "right": { "$ref": "#/$defs/nonNegativeInteger" },
+                "bottom": { "$ref": "#/$defs/nonNegativeInteger" }
+              }
+            }
+          }
+        },
+        "obstacles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxPerRow",
+            "typeCycle",
+            "smallCollision",
+            "largeCollision",
+            "startCorridor",
+            "yOffset"
+          ],
+          "properties": {
+            "maxPerRow": { "$ref": "#/$defs/positiveInteger" },
+            "typeCycle": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/nonNegativeInteger" }
+            },
+            "smallCollision": { "$ref": "#/$defs/rectangle" },
+            "largeCollision": { "$ref": "#/$defs/rectangle" },
+            "startCorridor": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["minX", "maxX", "bottomRowCount"],
+              "properties": {
+                "minX": { "$ref": "#/$defs/nonNegativeInteger" },
+                "maxX": { "$ref": "#/$defs/nonNegativeInteger" },
+                "bottomRowCount": { "$ref": "#/$defs/positiveInteger" }
+              }
+            },
+            "yOffset": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": {
+                "min": { "type": "integer" },
+                "max": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "pickups": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/pickup" }
+        },
+        "pickupPlacement": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "width",
+            "height",
+            "minX",
+            "maxX",
+            "minY",
+            "bottomMargin",
+            "messageTicks",
+            "animationAdvancesPerTick",
+            "initializationOrder",
+            "collectionOrder"
+          ],
+          "properties": {
+            "width": { "$ref": "#/$defs/positiveInteger" },
+            "height": { "$ref": "#/$defs/positiveInteger" },
+            "minX": { "$ref": "#/$defs/nonNegativeInteger" },
+            "maxX": { "$ref": "#/$defs/nonNegativeInteger" },
+            "minY": { "$ref": "#/$defs/nonNegativeInteger" },
+            "bottomMargin": { "$ref": "#/$defs/nonNegativeInteger" },
+            "messageTicks": { "$ref": "#/$defs/nonNegativeInteger" },
+            "animationAdvancesPerTick": {
+              "$ref": "#/$defs/nonNegativeInteger"
+            },
+            "initializationOrder": {
+              "type": "array",
+              "items": { "enum": ["life", "speed", "counter"] }
+            },
+            "collectionOrder": {
+              "type": "array",
+              "items": { "enum": ["life", "speed", "counter"] }
+            }
+          }
+        },
+        "transitions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dyingHoldTicks",
+            "terminalHoldTicks",
+            "deathVibrationMilliseconds"
+          ],
+          "properties": {
+            "dyingHoldTicks": { "$ref": "#/$defs/nonNegativeInteger" },
+            "terminalHoldTicks": { "$ref": "#/$defs/nonNegativeInteger" },
+            "deathVibrationMilliseconds": {
+              "$ref": "#/$defs/nonNegativeInteger"
+            }
+          }
+        },
+        "rng": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "zeroReplacement", "streamXor"],
+          "properties": {
+            "algorithm": { "const": "xorshift32" },
+            "zeroReplacement": { "$ref": "#/$defs/uint32" },
+            "streamXor": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["traffic", "obstacles", "pickups"],
+              "properties": {
+                "traffic": { "$ref": "#/$defs/uint32" },
+                "obstacles": { "$ref": "#/$defs/uint32" },
+                "pickups": { "$ref": "#/$defs/uint32" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "displayNumber",
+        "themeId",
+        "tileRows",
+        "laneSpeeds",
+        "trafficSpawnPercent",
+        "obstaclePlacementAttempts",
+        "initialTrafficRemaining",
+        "drawObstaclesAboveActors",
+        "assets"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "displayNumber": { "$ref": "#/$defs/positiveInteger" },
+        "themeId": { "type": "string", "minLength": 1 },
+        "tileRows": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/positiveInteger" }
+        },
+        "laneSpeeds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer" }
+        },
+        "trafficSpawnPercent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "obstaclePlacementAttempts": {
+          "$ref": "#/$defs/nonNegativeInteger"
+        },
+        "initialTrafficRemaining": {
+          "$ref": "#/$defs/nonNegativeInteger"
+        },
+        "drawObstaclesAboveActors": { "type": "boolean" },
+        "assets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "backgroundAtlasId",
+            "playerAtlasId",
+            "deadPlayerAssetId",
+            "trafficAtlasId",
+            "obstacleAtlasId",
+            "hudDigitsAtlasId"
+          ],
+          "properties": {
+            "backgroundAtlasId": { "type": "string", "minLength": 1 },
+            "playerAtlasId": { "type": "string", "minLength": 1 },
+            "deadPlayerAssetId": { "type": "string", "minLength": 1 },
+            "trafficAtlasId": { "type": "string", "minLength": 1 },
+            "obstacleAtlasId": { "type": "string", "minLength": 1 },
+            "hudDigitsAtlasId": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "atlas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "assetId", "sheet", "frames", "groups"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "assetId": { "type": "string", "minLength": 1 },
+        "sheet": { "$ref": "#/$defs/size" },
+        "frames": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "x", "y", "width", "height"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "x": { "$ref": "#/$defs/nonNegativeInteger" },
+              "y": { "$ref": "#/$defs/nonNegativeInteger" },
+              "width": { "$ref": "#/$defs/positiveInteger" },
+              "height": { "$ref": "#/$defs/positiveInteger" }
+            }
+          }
+        },
+        "groups": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
+        "directionalTransform": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["positiveSpeed", "negativeSpeed"],
+          "properties": {
+            "positiveSpeed": { "const": "mirrorX" },
+            "negativeSpeed": { "const": "source" }
+          }
+        }
+      }
+    }
+  }
+}

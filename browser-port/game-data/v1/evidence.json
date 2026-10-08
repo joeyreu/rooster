@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "data": "/levels/0/tileRows and /levels/0/laneSpeeds",
+      "source": "recovered/disassembly/com/plazmic/rooster/LevelConfig.java:44-209",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/levels/0 traffic, obstacle, HUD, draw-order, and asset fields",
+      "source": "recovered/disassembly/com/plazmic/rooster/LevelConfig.java:210-317",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/rules/player and player.rooster atlas groups",
+      "source": "recovered/disassembly/com/plazmic/rooster/Rooster.java:34-116",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/rules/traffic and traffic.cars atlas crops",
+      "source": "recovered/disassembly/com/plazmic/rooster/Traffic.java:34-198,663-721",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/rules/obstacles and obstacle.grass atlas crops",
+      "source": "recovered/disassembly/com/plazmic/rooster/Forest.java:34-328,430-470",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/rules/pickups and pickup atlases",
+      "source": "recovered/disassembly/com/plazmic/rooster/Game.java:276-312,450-483",
+      "confidence": "recovered"
+    },
+    {
+      "data": "overlay.gameStatus atlas crops",
+      "source": "recovered/disassembly/com/plazmic/rooster/Game.java:232-269",
+      "confidence": "recovered"
+    },
+    {
+      "data": "all sheet dimensions and checksums",
+      "source": "recovered/assets/manifest.json",
+      "confidence": "recovered"
+    },
+    {
+      "data": "/rules/rng",
+      "source": "docs/browser-port-spec.md:396-424",
+      "confidence": "browser-normalization"
+    }
+  ]
+}

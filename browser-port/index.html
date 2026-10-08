@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101413" />
+    <meta
+      name="description"
+      content="A faithful browser restoration of the classic BlackBerry game Rooster."
+    />
+    <title>Rooster — Browser Port</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#game-controls">Skip to game controls</a>
+
+    <main class="app-shell">
+      <header class="masthead" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Recovered BlackBerry classic</p>
+          <h1 id="page-title">Rooster</h1>
+        </div>
+        <p class="build-tag" aria-label="Browser port preview">Web port · Level 1</p>
+      </header>
+
+      <section class="game-card" aria-label="Rooster game">
+        <div class="status-strip" aria-label="Game status">
+          <span><small>Score</small><strong id="status-score">0</strong></span>
+          <span><small>Traffic</small><strong id="status-traffic">60</strong></span>
+          <span><small>Spare lives</small><strong id="status-lives">2</strong></span>
+          <span><small>Best</small><strong id="status-best">0</strong></span>
+        </div>
+
+        <div class="play-layout">
+          <div
+            class="game-wrapper"
+            id="game-wrapper"
+            tabindex="0"
+            aria-label="Rooster game scene. Cross the road and reach the top."
+            aria-describedby="game-objective"
+          >
+            <canvas
+              id="game-canvas"
+              width="240"
+              height="160"
+              role="img"
+              aria-label="Rooster game scene"
+            ></canvas>
+
+            <section class="menu-layer" id="menu-layer" aria-labelledby="menu-title">
+              <div
+                class="menu-panel"
+                id="menu-panel"
+                tabindex="-1"
+                aria-labelledby="menu-title"
+                aria-describedby="menu-copy"
+              >
+                <p class="menu-kicker" id="menu-kicker">Restoring the road…</p>
+                <h2 id="menu-title">Loading</h2>
+                <p class="menu-copy" id="menu-copy">Preparing the original artwork.</p>
+                <div class="menu-actions" id="menu-actions"></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="controls" id="game-controls">
+            <div class="dpad" role="group" aria-label="Movement controls">
+              <button class="control-button dpad-up" type="button" data-direction="up" aria-label="Move up">
+                <span aria-hidden="true">▲</span>
+              </button>
+              <button class="control-button dpad-left" type="button" data-direction="left" aria-label="Move left">
+                <span aria-hidden="true">◀</span>
+              </button>
+              <span class="dpad-center" aria-hidden="true"></span>
+              <button class="control-button dpad-right" type="button" data-direction="right" aria-label="Move right">
+                <span aria-hidden="true">▶</span>
+              </button>
+              <button class="control-button dpad-down" type="button" data-direction="down" aria-label="Move down">
+                <span aria-hidden="true">▼</span>
+              </button>
+            </div>
+
+            <div class="action-column">
+              <button class="action-button" id="pause-button" type="button" disabled>Pause</button>
+              <label class="toggle-control">
+                <input id="vibration-toggle" type="checkbox" checked />
+                <span>Death buzz</span>
+              </label>
+              <p class="key-hint" aria-hidden="true">Move: arrows / WASD<br />Pause: Esc / P</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="objective" id="game-objective">
+          Cross every lane and reach the top. Traffic is dangerous; every cone helps.
+        </p>
+
+        <details class="how-to-play">
+          <summary>How to play</summary>
+          <div class="how-to-grid">
+            <p><strong>♥ Life</strong> adds a spare attempt.</p>
+            <p><strong>» Speed</strong> doubles your movement speed.</p>
+            <p><strong>+ Traffic</strong> adds 10–20 to the traffic counter.</p>
+          </div>
+        </details>
+      </section>
+
+      <p class="status-mirror" id="status-mirror">
+        Objective: reach the top. Score 0. Two spare lives. 60 traffic remaining. Best score 0.
+      </p>
+      <div class="visually-hidden" id="live-region" aria-live="polite" aria-atomic="true"></div>
+    </main>
+
+    <dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+      <form method="dialog">
+        <p class="menu-kicker">Hold up</p>
+        <h2 id="confirm-title">Leave this run?</h2>
+        <p id="confirm-copy">Your current progress will be lost.</p>
+        <div class="dialog-actions">
+          <button class="secondary-button" value="cancel">Cancel</button>
+          <button class="danger-button" id="confirm-action" value="confirm">Leave run</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
