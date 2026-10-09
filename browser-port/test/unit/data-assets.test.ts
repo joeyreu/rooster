@@ -7,9 +7,11 @@ import { describe, expect, it } from "vitest";
 import manifest from "../../../recovered/assets/manifest.json";
 import {
   ASSET_CATALOG,
+  CAMPAIGN_ASSET_IDS,
   FIRST_PASS_ASSET_IDS,
   getAsset,
 } from "../../src/data/assets";
+import { PRELOAD_ASSET_IDS } from "../../src/render/asset-loader";
 
 const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
@@ -23,6 +25,16 @@ describe("first-pass asset catalog", () => {
       expect(asset.id).toBe(assetId);
       expect(asset.url).toEqual(expect.any(String));
       expect(asset.url.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("preloads the complete recovered campaign without duplicate requests", () => {
+    expect(CAMPAIGN_ASSET_IDS).toHaveLength(36);
+    expect(new Set(CAMPAIGN_ASSET_IDS).size).toBe(CAMPAIGN_ASSET_IDS.length);
+    expect(new Set(PRELOAD_ASSET_IDS).size).toBe(PRELOAD_ASSET_IDS.length);
+    expect(PRELOAD_ASSET_IDS).not.toContain("dialog.confirmQuit");
+    for (const assetId of CAMPAIGN_ASSET_IDS) {
+      expect(PRELOAD_ASSET_IDS, assetId).toContain(assetId);
     }
   });
 

@@ -3,10 +3,16 @@ import { startingCameraY } from "./systems/movement";
 import { generateObstacles } from "./systems/obstacles";
 import { generatePickups } from "./systems/pickups";
 import { advanceTraffic, buildTrafficPool } from "./systems/traffic";
-import type { GameDefinition, GameState } from "./types";
+import type { GameDefinition, GameState, RunContinuation } from "./types";
 
-export function createInitialState(definition: GameDefinition, runSeed: number): GameState {
-  let rngStates = deriveRngStates(runSeed, definition.rules);
+export function createInitialState(
+  definition: GameDefinition,
+  runSeed: number,
+  continuation?: RunContinuation,
+): GameState {
+  const initialRngStates = deriveRngStates(runSeed, definition.rules);
+  let rngStates =
+    continuation === undefined ? initialRngStates : { ...continuation.rngStates };
   const generatedObstacles = generateObstacles(definition, rngStates);
   rngStates = generatedObstacles.rngStates;
 
@@ -40,9 +46,9 @@ export function createInitialState(definition: GameDefinition, runSeed: number):
     pickups: [],
     pickupMessages: [],
     deadMarkers: [],
-    spareLives: rules.player.initialSpareLives,
+    spareLives: continuation?.spareLives ?? rules.player.initialSpareLives,
     trafficRemaining: level.initialTrafficRemaining,
-    score: 0,
+    score: continuation?.score ?? 0,
     cameraY: startingCameraY(definition),
     timers: { phaseElapsedTicks: 0 },
     lastDeathCause: null,

@@ -1,4 +1,6 @@
 export interface StatusViewModel {
+  level: number;
+  totalLevels: number;
   score: number;
   trafficRemaining: number;
   spareLives: number;
@@ -7,6 +9,7 @@ export interface StatusViewModel {
 }
 
 export class StatusView {
+  private readonly level = statusElement("status-level");
   private readonly score = statusElement("status-score");
   private readonly traffic = statusElement("status-traffic");
   private readonly lives = statusElement("status-lives");
@@ -16,11 +19,12 @@ export class StatusView {
 
   update(model: StatusViewModel): void {
     const visibleLives = Math.max(0, model.spareLives);
+    this.level.textContent = `${model.level}/${model.totalLevels}`;
     this.score.textContent = String(model.score);
     this.traffic.textContent = String(model.trafficRemaining);
     this.lives.textContent = String(visibleLives);
     this.best.textContent = String(model.bestScore);
-    this.mirror.textContent = `${model.objective} Score ${model.score}. ${visibleLives} spare ${visibleLives === 1 ? "life" : "lives"}. ${model.trafficRemaining} traffic remaining. Best score ${model.bestScore}.`;
+    this.mirror.textContent = `${model.objective} Level ${model.level} of ${model.totalLevels}. Score ${model.score}. ${visibleLives} spare ${visibleLives === 1 ? "life" : "lives"}. ${model.trafficRemaining} traffic remaining. Best score ${model.bestScore}.`;
   }
 
   announce(message: string): void {

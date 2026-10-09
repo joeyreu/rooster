@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createGameEngine, deriveRngStates, nextU32 } from "../../src/core";
+import {
+  createGameEngine,
+  deriveRngStates,
+  nextU32,
+  type RunContinuation,
+} from "../../src/core";
 import { makeDefinition } from "./core-test-support";
 
 describe("run initialization", () => {
@@ -59,5 +64,64 @@ describe("run initialization", () => {
     const purple = state.pickups.find(({ kind }) => kind === "purple");
     expect(purple?.bonus).toBeGreaterThanOrEqual(10);
     expect(purple?.bonus).toBeLessThanOrEqual(20);
+  });
+
+  it("carries cumulative score, spare lives, and RNG streams into a new level", () => {
+    const definition = makeDefinition({
+      warmupTicks: 2,
+      obstaclePlacementAttempts: 1,
+    });
+    const continuation: RunContinuation = {
+      score: 137,
+      spareLives: 4,
+      rngStates: {
+        traffic: 0x1020_3040,
+        obstacles: 0x5060_7080,
+        pickups: 0x90a0_b0c0,
+      },
+    };
+
+    const state = createGameEngine(definition).createRun(99, continuation);
+
+    expect(state.score).toBe(137);
+    expect(state.spareLives).toBe(4);
+    expect(state.rngStates).toEqual({
+      traffic: nextU32(nextU32(continuation.rngStates.traffic)),
+      obstacles: nextU32(nextU32(nextU32(continuation.rngStates.obstacles))),
+      pickups: nextU32(nextU32(nextU32(continuation.rngStates.pickups))),
+    });
+    expect(state.rngStates).not.toBe(continuation.rngStates);
+  });
+
+  it("resets level-local state and boosted speed when continuing", () => {
+    const definition = makeDefinition({ trafficSpawnPercent: 100 });
+    const continuation: RunContinuation = {
+      score: 25,
+      spareLives: 0,
+      rngStates: deriveRngStates(123, definition.rules),
+    };
+
+    const state = createGameEngine(definition).createRun(123, continuation);
+
+    expect(state).toMatchObject({
+      route: "run",
+      phase: "playing",
+      tick: 0,
+      score: 25,
+      spareLives: 0,
+      trafficRemaining: definition.level.initialTrafficRemaining,
+      pickupMessages: [],
+      deadMarkers: [],
+      result: null,
+      timers: { phaseElapsedTicks: 0 },
+    });
+    expect(state.player).toMatchObject({
+      x: definition.rules.player.spawnX,
+      speed: definition.rules.player.normalSpeed,
+      visible: true,
+      facing: "up",
+      animationStep: 0,
+      inputLockedUntilRelease: false,
+    });
   });
 });

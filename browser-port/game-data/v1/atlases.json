@@ -16,6 +16,62 @@
       }
     },
     {
+      "id": "background.desert",
+      "assetId": "background.desert",
+      "sheet": { "width": 240, "height": 60 },
+      "frames": [
+        { "id": "tile-1", "x": 0, "y": 0, "width": 240, "height": 15 },
+        { "id": "tile-2", "x": 0, "y": 15, "width": 240, "height": 15 },
+        { "id": "tile-3", "x": 0, "y": 30, "width": 240, "height": 15 },
+        { "id": "tile-4", "x": 0, "y": 45, "width": 240, "height": 15 }
+      ],
+      "groups": {
+        "tileIds": ["tile-1", "tile-2", "tile-3", "tile-4"]
+      }
+    },
+    {
+      "id": "background.water",
+      "assetId": "background.water",
+      "sheet": { "width": 240, "height": 60 },
+      "frames": [
+        { "id": "tile-1", "x": 0, "y": 0, "width": 240, "height": 15 },
+        { "id": "tile-2", "x": 0, "y": 15, "width": 240, "height": 15 },
+        { "id": "tile-3", "x": 0, "y": 30, "width": 240, "height": 15 },
+        { "id": "tile-4", "x": 0, "y": 45, "width": 240, "height": 15 }
+      ],
+      "groups": {
+        "tileIds": ["tile-1", "tile-2", "tile-3", "tile-4"]
+      }
+    },
+    {
+      "id": "background.steel",
+      "assetId": "background.steel",
+      "sheet": { "width": 240, "height": 60 },
+      "frames": [
+        { "id": "tile-1", "x": 0, "y": 0, "width": 240, "height": 15 },
+        { "id": "tile-2", "x": 0, "y": 15, "width": 240, "height": 15 },
+        { "id": "tile-3", "x": 0, "y": 30, "width": 240, "height": 15 },
+        { "id": "tile-4", "x": 0, "y": 45, "width": 240, "height": 15 }
+      ],
+      "groups": {
+        "tileIds": ["tile-1", "tile-2", "tile-3", "tile-4"]
+      }
+    },
+    {
+      "id": "background.space",
+      "assetId": "background.space",
+      "sheet": { "width": 240, "height": 60 },
+      "frames": [
+        { "id": "tile-1", "x": 0, "y": 0, "width": 240, "height": 15 },
+        { "id": "tile-2", "x": 0, "y": 15, "width": 240, "height": 15 },
+        { "id": "tile-3", "x": 0, "y": 30, "width": 240, "height": 15 },
+        { "id": "tile-4", "x": 0, "y": 45, "width": 240, "height": 15 }
+      ],
+      "groups": {
+        "tileIds": ["tile-1", "tile-2", "tile-3", "tile-4"]
+      }
+    },
+    {
       "id": "player.rooster",
       "assetId": "player.rooster",
       "sheet": { "width": 25, "height": 300 },
@@ -39,6 +95,117 @@
         "down": ["frame-7", "frame-6", "frame-8", "frame-6"],
         "left": ["frame-10", "frame-9", "frame-11", "frame-9"]
       }
+    },
+    {
+      "id": "player.roosterBoat",
+      "assetId": "player.roosterBoat",
+      "sheet": { "width": 25, "height": 300 },
+      "frames": [
+        { "id": "frame-0", "x": 0, "y": 0, "width": 25, "height": 25 },
+        { "id": "frame-1", "x": 0, "y": 25, "width": 25, "height": 25 },
+        { "id": "frame-2", "x": 0, "y": 50, "width": 25, "height": 25 },
+        { "id": "frame-3", "x": 0, "y": 75, "width": 25, "height": 25 },
+        { "id": "frame-4", "x": 0, "y": 100, "width": 25, "height": 25 },
+        { "id": "frame-5", "x": 0, "y": 125, "width": 25, "height": 25 },
+        { "id": "frame-6", "x": 0, "y": 150, "width": 25, "height": 25 },
+        { "id": "frame-7", "x": 0, "y": 175, "width": 25, "height": 25 },
+        { "id": "frame-8", "x": 0, "y": 200, "width": 25, "height": 25 },
+        { "id": "frame-9", "x": 0, "y": 225, "width": 25, "height": 25 },
+        { "id": "frame-10", "x": 0, "y": 250, "width": 25, "height": 25 },
+        { "id": "frame-11", "x": 0, "y": 275, "width": 25, "height": 25 }
+      ],
+      "groups": {
+        "up": ["frame-1", "frame-0", "frame-2", "frame-0"],
+        "right": ["frame-4", "frame-3", "frame-5", "frame-3"],
+        "down": ["frame-7", "frame-6", "frame-8", "frame-6"],
+        "left": ["frame-10", "frame-9", "frame-11", "frame-9"]
+      }
+    },
+    {
+      "id": "player.roosterTank",
+      "assetId": "player.roosterTank",
+      "sheet": { "width": 25, "height": 300 },
+      "frames": [
+        { "id": "frame-0", "x": 0, "y": 0, "width": 25, "height": 25 },
+        { "id": "frame-1", "x": 0, "y": 25, "width": 25, "height": 25 },
+        { "id": "frame-2", "x": 0, "y": 50, "width": 25, "height": 25 },
+        { "id": "frame-3", "x": 0, "y": 75, "width": 25, "height": 25 },
+        { "id": "frame-4", "x": 0, "y": 100, "width": 25, "height": 25 },
+        { "id": "frame-5", "x": 0, "y": 125, "width": 25, "height": 25 },
+        { "id": "frame-6", "x": 0, "y": 150, "width": 25, "height": 25 },
+        { "id": "frame-7", "x": 0, "y": 175, "width": 25, "height": 25 },
+        { "id": "frame-8", "x": 0, "y": 200, "width": 25, "height": 25 },
+        { "id": "frame-9", "x": 0, "y": 225, "width": 25, "height": 25 },
+        { "id": "frame-10", "x": 0, "y": 250, "width": 25, "height": 25 },
+        { "id": "frame-11", "x": 0, "y": 275, "width": 25, "height": 25 }
+      ],
+      "groups": {
+        "up": ["frame-1", "frame-0", "frame-2", "frame-0"],
+        "right": ["frame-4", "frame-3", "frame-5", "frame-3"],
+        "down": ["frame-7", "frame-6", "frame-8", "frame-6"],
+        "left": ["frame-10", "frame-9", "frame-11", "frame-9"]
+      }
+    },
+    {
+      "id": "player.roosterSpace",
+      "assetId": "player.roosterSpace",
+      "sheet": { "width": 25, "height": 300 },
+      "frames": [
+        { "id": "frame-0", "x": 0, "y": 0, "width": 25, "height": 25 },
+        { "id": "frame-1", "x": 0, "y": 25, "width": 25, "height": 25 },
+        { "id": "frame-2", "x": 0, "y": 50, "width": 25, "height": 25 },
+        { "id": "frame-3", "x": 0, "y": 75, "width": 25, "height": 25 },
+        { "id": "frame-4", "x": 0, "y": 100, "width": 25, "height": 25 },
+        { "id": "frame-5", "x": 0, "y": 125, "width": 25, "height": 25 },
+        { "id": "frame-6", "x": 0, "y": 150, "width": 25, "height": 25 },
+        { "id": "frame-7", "x": 0, "y": 175, "width": 25, "height": 25 },
+        { "id": "frame-8", "x": 0, "y": 200, "width": 25, "height": 25 },
+        { "id": "frame-9", "x": 0, "y": 225, "width": 25, "height": 25 },
+        { "id": "frame-10", "x": 0, "y": 250, "width": 25, "height": 25 },
+        { "id": "frame-11", "x": 0, "y": 275, "width": 25, "height": 25 }
+      ],
+      "groups": {
+        "up": ["frame-1", "frame-0", "frame-2", "frame-0"],
+        "right": ["frame-4", "frame-3", "frame-5", "frame-3"],
+        "down": ["frame-7", "frame-6", "frame-8", "frame-6"],
+        "left": ["frame-10", "frame-9", "frame-11", "frame-9"]
+      }
+    },
+    {
+      "id": "player.roosterDead",
+      "assetId": "player.roosterDead",
+      "sheet": { "width": 25, "height": 25 },
+      "frames": [
+        { "id": "dead", "x": 0, "y": 0, "width": 25, "height": 25 }
+      ],
+      "groups": { "death": ["dead"] }
+    },
+    {
+      "id": "player.roosterBoatDead",
+      "assetId": "player.roosterBoatDead",
+      "sheet": { "width": 25, "height": 25 },
+      "frames": [
+        { "id": "dead", "x": 0, "y": 0, "width": 25, "height": 25 }
+      ],
+      "groups": { "death": ["dead"] }
+    },
+    {
+      "id": "player.roosterTankDead",
+      "assetId": "player.roosterTankDead",
+      "sheet": { "width": 25, "height": 25 },
+      "frames": [
+        { "id": "dead", "x": 0, "y": 0, "width": 25, "height": 25 }
+      ],
+      "groups": { "death": ["dead"] }
+    },
+    {
+      "id": "player.roosterSpaceDead",
+      "assetId": "player.roosterSpaceDead",
+      "sheet": { "width": 25, "height": 25 },
+      "frames": [
+        { "id": "dead", "x": 0, "y": 0, "width": 25, "height": 25 }
+      ],
+      "groups": { "death": ["dead"] }
     },
     {
       "id": "traffic.cars",
@@ -68,8 +235,153 @@
       }
     },
     {
+      "id": "traffic.boats",
+      "assetId": "traffic.boats",
+      "sheet": { "width": 380, "height": 18 },
+      "frames": [
+        { "id": "vehicle-0", "x": 0, "y": 0, "width": 54, "height": 18 },
+        { "id": "vehicle-1", "x": 54, "y": 0, "width": 48, "height": 18 },
+        { "id": "vehicle-2", "x": 102, "y": 0, "width": 46, "height": 18 },
+        { "id": "vehicle-3", "x": 148, "y": 0, "width": 74, "height": 18 },
+        { "id": "vehicle-4", "x": 222, "y": 0, "width": 37, "height": 18 },
+        { "id": "vehicle-5", "x": 259, "y": 0, "width": 36, "height": 18 },
+        { "id": "vehicle-6", "x": 295, "y": 0, "width": 85, "height": 18 }
+      ],
+      "groups": {
+        "poolCycle": [
+          "vehicle-0", "vehicle-1", "vehicle-2", "vehicle-3",
+          "vehicle-4", "vehicle-5", "vehicle-6"
+        ]
+      },
+      "directionalTransform": {
+        "positiveSpeed": "mirrorX",
+        "negativeSpeed": "source"
+      }
+    },
+    {
+      "id": "traffic.mercLevel13",
+      "assetId": "traffic.merc",
+      "sheet": { "width": 215, "height": 18 },
+      "frames": [
+        { "id": "vehicle-0", "x": 0, "y": 0, "width": 45, "height": 18 },
+        { "id": "vehicle-1", "x": 45, "y": 0, "width": 32, "height": 18 },
+        { "id": "vehicle-2", "x": 77, "y": 0, "width": 18, "height": 18 },
+        { "id": "vehicle-3", "x": 95, "y": 0, "width": 24, "height": 18 },
+        { "id": "vehicle-4", "x": 119, "y": 0, "width": 20, "height": 18 },
+        { "id": "vehicle-5", "x": 139, "y": 0, "width": 15, "height": 18 },
+        { "id": "vehicle-6", "x": 154, "y": 0, "width": 61, "height": 18 }
+      ],
+      "groups": {
+        "poolCycle": [
+          "vehicle-0", "vehicle-1", "vehicle-2", "vehicle-3",
+          "vehicle-4", "vehicle-5", "vehicle-6"
+        ]
+      },
+      "directionalTransform": {
+        "positiveSpeed": "mirrorX",
+        "negativeSpeed": "source"
+      }
+    },
+    {
+      "id": "traffic.merc",
+      "assetId": "traffic.merc",
+      "sheet": { "width": 215, "height": 18 },
+      "frames": [
+        { "id": "vehicle-0", "x": 0, "y": 0, "width": 45, "height": 18 },
+        { "id": "vehicle-1", "x": 45, "y": 0, "width": 32, "height": 18 },
+        { "id": "vehicle-2", "x": 77, "y": 0, "width": 18, "height": 18 },
+        { "id": "vehicle-3", "x": 95, "y": 0, "width": 24, "height": 18 },
+        { "id": "vehicle-4", "x": 119, "y": 0, "width": 20, "height": 18 },
+        { "id": "vehicle-5", "x": 139, "y": 0, "width": 14, "height": 18 },
+        { "id": "vehicle-6", "x": 153, "y": 0, "width": 62, "height": 18 }
+      ],
+      "groups": {
+        "poolCycle": [
+          "vehicle-0", "vehicle-1", "vehicle-2", "vehicle-3",
+          "vehicle-4", "vehicle-5", "vehicle-6"
+        ]
+      },
+      "directionalTransform": {
+        "positiveSpeed": "mirrorX",
+        "negativeSpeed": "source"
+      }
+    },
+    {
+      "id": "traffic.ships",
+      "assetId": "traffic.ships",
+      "sheet": { "width": 137, "height": 18 },
+      "frames": [
+        { "id": "vehicle-0", "x": 0, "y": 0, "width": 25, "height": 18 },
+        { "id": "vehicle-1", "x": 25, "y": 0, "width": 24, "height": 18 },
+        { "id": "vehicle-2", "x": 49, "y": 0, "width": 25, "height": 18 },
+        { "id": "vehicle-3", "x": 74, "y": 0, "width": 45, "height": 18 },
+        { "id": "vehicle-4", "x": 119, "y": 0, "width": 18, "height": 18 }
+      ],
+      "groups": {
+        "poolCycle": [
+          "vehicle-0", "vehicle-1", "vehicle-2", "vehicle-3", "vehicle-4"
+        ]
+      },
+      "directionalTransform": {
+        "positiveSpeed": "mirrorX",
+        "negativeSpeed": "source"
+      }
+    },
+    {
       "id": "obstacle.grass",
       "assetId": "obstacle.grass",
+      "sheet": { "width": 30, "height": 45 },
+      "frames": [
+        { "id": "small-0", "x": 0, "y": 0, "width": 15, "height": 15 },
+        { "id": "small-1", "x": 15, "y": 0, "width": 15, "height": 15 },
+        { "id": "large-2", "x": 0, "y": 15, "width": 30, "height": 30 }
+      ],
+      "groups": {
+        "typeIndex": ["small-0", "small-1", "large-2"]
+      }
+    },
+    {
+      "id": "obstacle.desert",
+      "assetId": "obstacle.desert",
+      "sheet": { "width": 30, "height": 45 },
+      "frames": [
+        { "id": "small-0", "x": 0, "y": 0, "width": 15, "height": 15 },
+        { "id": "small-1", "x": 15, "y": 0, "width": 15, "height": 15 },
+        { "id": "large-2", "x": 0, "y": 15, "width": 30, "height": 30 }
+      ],
+      "groups": {
+        "typeIndex": ["small-0", "small-1", "large-2"]
+      }
+    },
+    {
+      "id": "obstacle.water",
+      "assetId": "obstacle.water",
+      "sheet": { "width": 30, "height": 45 },
+      "frames": [
+        { "id": "small-0", "x": 0, "y": 0, "width": 15, "height": 15 },
+        { "id": "small-1", "x": 15, "y": 0, "width": 15, "height": 15 },
+        { "id": "large-2", "x": 0, "y": 15, "width": 30, "height": 30 }
+      ],
+      "groups": {
+        "typeIndex": ["small-0", "small-1", "large-2"]
+      }
+    },
+    {
+      "id": "obstacle.metal",
+      "assetId": "obstacle.metal",
+      "sheet": { "width": 30, "height": 45 },
+      "frames": [
+        { "id": "small-0", "x": 0, "y": 0, "width": 15, "height": 15 },
+        { "id": "small-1", "x": 15, "y": 0, "width": 15, "height": 15 },
+        { "id": "large-2", "x": 0, "y": 15, "width": 30, "height": 30 }
+      ],
+      "groups": {
+        "typeIndex": ["small-0", "small-1", "large-2"]
+      }
+    },
+    {
+      "id": "obstacle.space",
+      "assetId": "obstacle.space",
       "sheet": { "width": 30, "height": 45 },
       "frames": [
         { "id": "small-0", "x": 0, "y": 0, "width": 15, "height": 15 },

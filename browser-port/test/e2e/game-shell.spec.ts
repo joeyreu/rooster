@@ -16,7 +16,7 @@ test("starts a run and keeps simulation frozen while paused", async ({ page }) =
 
   await expect.poll(async () => Number(await game.getAttribute("data-tick"))).toBeGreaterThan(0);
   await page.getByRole("button", { name: "Pause", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Paused" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Paused", exact: true })).toBeVisible();
   await expect(game).toHaveAttribute("data-suspended", "true");
   const pausedTick = Number(await game.getAttribute("data-tick"));
   await page.waitForTimeout(240);
@@ -48,14 +48,14 @@ test("supports held keyboard movement and a global pause shortcut", async ({ pag
   );
 
   await page.keyboard.press("p");
-  await expect(page.getByRole("heading", { name: "Paused" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Paused", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "New game" }).focus();
   await page.keyboard.press("p");
-  await expect(page.getByRole("heading", { name: "Paused" })).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Paused", exact: true })).toBeHidden();
 
   await page.getByRole("checkbox", { name: "Death buzz" }).focus();
   await page.keyboard.press("p");
-  await expect(page.getByRole("heading", { name: "Paused" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Paused", exact: true })).toBeVisible();
 });
 
 test("offers semantic touch controls without covering the scene", async ({ page }) => {
@@ -117,4 +117,16 @@ test("keeps controls reachable in short landscape", async ({ page }) => {
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(568);
   }
   await expect(page.locator("#game-wrapper")).toHaveAttribute("data-route", "run");
+});
+
+test("fits the complete game surface in tablet landscape", async ({ page }) => {
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.reload();
+  await page.getByRole("button", { name: "Start game" }).click();
+
+  const dimensions = await page.evaluate(() => ({
+    viewport: window.innerHeight,
+    document: document.documentElement.scrollHeight,
+  }));
+  expect(dimensions.document).toBeLessThanOrEqual(dimensions.viewport);
 });

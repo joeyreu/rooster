@@ -138,7 +138,7 @@ h1 {
 
 .status-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-bottom: 1px solid var(--line);
 }
 
@@ -597,6 +597,19 @@ button:not(:disabled):active {
   .play-layout {
     grid-template-columns: minmax(24rem, 1fr) auto;
     padding: 0.55rem;
+  }
+
+  .game-wrapper {
+    width: 24rem;
+  }
+
+  .controls {
+    flex-direction: row;
+    gap: 0.6rem;
+  }
+
+  .action-column {
+    width: 8.5rem;
   }
 }
 

@@ -4,6 +4,7 @@ import {
   type AssetCatalogEntry,
   type AssetId,
 } from "../data";
+import { CAMPAIGN_ASSET_IDS } from "../data/assets";
 
 export type LoadedAssets = ReadonlyMap<AssetId, HTMLImageElement>;
 
@@ -12,6 +13,14 @@ const LOADING_ASSET_IDS = [
   "loading.bar",
 ] as const satisfies readonly AssetId[];
 const LOADING_ASSET_ID_SET = new Set<AssetId>(LOADING_ASSET_IDS);
+
+/**
+ * Keep the original public loader name while expanding its payload to cover
+ * every image that the full recovered campaign can request.
+ */
+export const PRELOAD_ASSET_IDS: readonly AssetId[] = Object.freeze([
+  ...new Set<AssetId>([...FIRST_PASS_ASSET_IDS, ...CAMPAIGN_ASSET_IDS]),
+]);
 
 export class AssetLoadError extends Error {
   constructor(
@@ -27,7 +36,7 @@ export async function loadFirstPassAssets(
   onProgress: (loaded: number, total: number) => void,
   onAssetLoaded?: (assetId: AssetId, image: HTMLImageElement) => void,
 ): Promise<LoadedAssets> {
-  const total = FIRST_PASS_ASSET_IDS.length;
+  const total = PRELOAD_ASSET_IDS.length;
   const images = new Map<AssetId, HTMLImageElement>();
   let loaded = 0;
   onProgress(loaded, total);
@@ -47,7 +56,7 @@ export async function loadFirstPassAssets(
 
   await loadBatch(LOADING_ASSET_IDS);
   await loadBatch(
-    FIRST_PASS_ASSET_IDS.filter((assetId) => !LOADING_ASSET_ID_SET.has(assetId)),
+    PRELOAD_ASSET_IDS.filter((assetId) => !LOADING_ASSET_ID_SET.has(assetId)),
   );
 
   return images;

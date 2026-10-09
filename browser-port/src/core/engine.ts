@@ -23,6 +23,7 @@ import type {
   GameEvent,
   GameState,
   InputSnapshot,
+  RunContinuation,
   StepResult,
   SuspensionReason,
 } from "./types";
@@ -249,7 +250,8 @@ export function createGameEngine(definition: GameDefinition): GameEngine {
   assertValidGameDefinition(definition);
   return Object.freeze({
     definition,
-    createRun: (runSeed: number) => createInitialState(definition, runSeed),
+    createRun: (runSeed: number, continuation?: RunContinuation) =>
+      createInitialState(definition, runSeed, continuation),
     step: (state: GameState, input: InputSnapshot) => stepGame(definition, state, input),
     suspend: (state: GameState, reason: SuspensionReason) => suspendGame(state, reason),
     resume: (state: GameState) => resumeGame(state),

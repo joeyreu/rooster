@@ -137,6 +137,367 @@
         "obstacleAtlasId": "obstacle.grass",
         "hudDigitsAtlasId": "hud.digitsBlack"
       }
+    },
+    {
+      "id": "level-2",
+      "displayNumber": 2,
+      "themeId": "grass",
+      "tileRows": [4, 4, 1, 2, 3, 4, 4, 1, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -1, -2, -3, 0, 0, 1, 3, 2, 0, 0, 0],
+      "trafficSpawnPercent": 12,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 60,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.grass",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.grass",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-3",
+      "displayNumber": 3,
+      "themeId": "grass",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 4, 1, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -3, -1, -3, -1, 0, 0, 3, 1, 3, 1, 0, 0],
+      "trafficSpawnPercent": 13,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 70,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.grass",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.grass",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-4",
+      "displayNumber": 4,
+      "themeId": "grass",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 4, 1, 2, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -3, -2, -2, -3, 0, 0, 3, 3, 4, 3, 3, 0, 0],
+      "trafficSpawnPercent": 14,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 80,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.grass",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.grass",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-5",
+      "displayNumber": 5,
+      "themeId": "desert",
+      "tileRows": [4, 4, 1, 3, 4, 1, 3, 4, 1, 3, 4, 4],
+      "laneSpeeds": [0, 0, -2, 3, 0, 1, -3, 0, 4, -4, 0, 0],
+      "trafficSpawnPercent": 15,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 80,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.desert",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.desert",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-6",
+      "displayNumber": 6,
+      "themeId": "desert",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 1, 3, 4, 1, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -1, -2, 3, 4, 0, -1, 2, 0, -1, -2, 3, 4, 0, 0],
+      "trafficSpawnPercent": 20,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 80,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.desert",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.desert",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-7",
+      "displayNumber": 7,
+      "themeId": "desert",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -2, -3, 4, 3, 0, -1, -3, 4, 1, 0, -4, -3, 4, 2, 0, 0],
+      "trafficSpawnPercent": 25,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 100,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.desert",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.desert",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-8",
+      "displayNumber": 8,
+      "themeId": "desert",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -2, -3, 4, 3, 0, -1, -3, 4, 1, 0, -4, -3, 4, -3, 4, 2, 0, 0],
+      "trafficSpawnPercent": 30,
+      "obstaclePlacementAttempts": 20,
+      "initialTrafficRemaining": 150,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.desert",
+        "playerAtlasId": "player.rooster",
+        "deadPlayerAssetId": "player.roosterDead",
+        "trafficAtlasId": "traffic.cars",
+        "obstacleAtlasId": "obstacle.desert",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-9",
+      "displayNumber": 9,
+      "themeId": "water",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3],
+      "laneSpeeds": [0, 0, 4, -4, 1, -4, 0, -4, 3, 0, 4, -3, 4, 0, 0],
+      "trafficSpawnPercent": 25,
+      "obstaclePlacementAttempts": 25,
+      "initialTrafficRemaining": 110,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.water",
+        "playerAtlasId": "player.roosterBoat",
+        "deadPlayerAssetId": "player.roosterBoatDead",
+        "trafficAtlasId": "traffic.boats",
+        "obstacleAtlasId": "obstacle.water",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-10",
+      "displayNumber": 10,
+      "themeId": "water",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1],
+      "laneSpeeds": [0, 0, 5, -4, 3, -3, 0, -1, 1, -1, 1, 0, 3, -4, 5, 0, 0],
+      "trafficSpawnPercent": 25,
+      "obstaclePlacementAttempts": 25,
+      "initialTrafficRemaining": 110,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.water",
+        "playerAtlasId": "player.roosterBoat",
+        "deadPlayerAssetId": "player.roosterBoatDead",
+        "trafficAtlasId": "traffic.boats",
+        "obstacleAtlasId": "obstacle.water",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-11",
+      "displayNumber": 11,
+      "themeId": "water",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3],
+      "laneSpeeds": [0, 0, 5, -4, 4, -3, 2, -1, 0, -1, 1, 0, 1, -2, 3, 4, -5, 0, 0],
+      "trafficSpawnPercent": 25,
+      "obstaclePlacementAttempts": 25,
+      "initialTrafficRemaining": 120,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.water",
+        "playerAtlasId": "player.roosterBoat",
+        "deadPlayerAssetId": "player.roosterBoatDead",
+        "trafficAtlasId": "traffic.boats",
+        "obstacleAtlasId": "obstacle.water",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-12",
+      "displayNumber": 12,
+      "themeId": "water",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+      "laneSpeeds": [0, 0, 5, -4, 4, -3, 2, -1, 0, -1, 1, 6, 0, 1, -2, 3, 4, -5, 0, 0],
+      "trafficSpawnPercent": 30,
+      "obstaclePlacementAttempts": 25,
+      "initialTrafficRemaining": 160,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.water",
+        "playerAtlasId": "player.roosterBoat",
+        "deadPlayerAssetId": "player.roosterBoatDead",
+        "trafficAtlasId": "traffic.boats",
+        "obstacleAtlasId": "obstacle.water",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-13",
+      "displayNumber": 13,
+      "themeId": "steel",
+      "tileRows": [4, 4, 1, 3, 4, 1, 3, 4, 1, 3, 4, 1, 3, 4, 1, 3, 4, 4],
+      "laneSpeeds": [0, 0, -5, 5, 0, 5, -5, 0, 5, -5, 0, 5, -5, 0, 5, -5, 0, 0],
+      "trafficSpawnPercent": 30,
+      "obstaclePlacementAttempts": 30,
+      "initialTrafficRemaining": 120,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.steel",
+        "playerAtlasId": "player.roosterTank",
+        "deadPlayerAssetId": "player.roosterTankDead",
+        "trafficAtlasId": "traffic.mercLevel13",
+        "obstacleAtlasId": "obstacle.metal",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-14",
+      "displayNumber": 14,
+      "themeId": "steel",
+      "tileRows": [4, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -5, -6, 5, 0, -5, 6, 5, 0, -6, -1, 6, 0, -6, -1, 6, 0, 0],
+      "trafficSpawnPercent": 30,
+      "obstaclePlacementAttempts": 30,
+      "initialTrafficRemaining": 140,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.steel",
+        "playerAtlasId": "player.roosterTank",
+        "deadPlayerAssetId": "player.roosterTankDead",
+        "trafficAtlasId": "traffic.merc",
+        "obstacleAtlasId": "obstacle.metal",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-15",
+      "displayNumber": 15,
+      "themeId": "steel",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -6, -4, 4, 6, 0, -4, -6, 6, 4, 0, -4, -6, 4, 5, 0, -4, -6, 4, 5, 0, 0],
+      "trafficSpawnPercent": 35,
+      "obstaclePlacementAttempts": 30,
+      "initialTrafficRemaining": 150,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.steel",
+        "playerAtlasId": "player.roosterTank",
+        "deadPlayerAssetId": "player.roosterTankDead",
+        "trafficAtlasId": "traffic.merc",
+        "obstacleAtlasId": "obstacle.metal",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-16",
+      "displayNumber": 16,
+      "themeId": "steel",
+      "tileRows": [4, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 1, 2, 2, 3, 4, 4],
+      "laneSpeeds": [0, 0, -6, -4, 4, 6, 0, -4, -6, 6, 4, 0, -4, -6, 4, 5, 0, -4, -6, 4, 5, 0, 0],
+      "trafficSpawnPercent": 40,
+      "obstaclePlacementAttempts": 30,
+      "initialTrafficRemaining": 160,
+      "drawObstaclesAboveActors": true,
+      "assets": {
+        "backgroundAtlasId": "background.steel",
+        "playerAtlasId": "player.roosterTank",
+        "deadPlayerAssetId": "player.roosterTankDead",
+        "trafficAtlasId": "traffic.merc",
+        "obstacleAtlasId": "obstacle.metal",
+        "hudDigitsAtlasId": "hud.digitsBlack"
+      }
+    },
+    {
+      "id": "level-17",
+      "displayNumber": 17,
+      "themeId": "space",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1],
+      "laneSpeeds": [0, 0, 7, -7, 3, -7, -7, 7, 0, 7, -7, 3, -7, -7, 7, 0, 0],
+      "trafficSpawnPercent": 40,
+      "obstaclePlacementAttempts": 35,
+      "initialTrafficRemaining": 160,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.space",
+        "playerAtlasId": "player.roosterSpace",
+        "deadPlayerAssetId": "player.roosterSpaceDead",
+        "trafficAtlasId": "traffic.ships",
+        "obstacleAtlasId": "obstacle.space",
+        "hudDigitsAtlasId": "hud.digitsWhite"
+      }
+    },
+    {
+      "id": "level-18",
+      "displayNumber": 18,
+      "themeId": "space",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+      "laneSpeeds": [0, 0, 8, -6, 7, -5, -7, 8, 0, 3, -8, 7, -6, -3, 4, 0, 3, -8, 3, -6, -3, 4, 0, 0],
+      "trafficSpawnPercent": 40,
+      "obstaclePlacementAttempts": 35,
+      "initialTrafficRemaining": 170,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.space",
+        "playerAtlasId": "player.roosterSpace",
+        "deadPlayerAssetId": "player.roosterSpaceDead",
+        "trafficAtlasId": "traffic.ships",
+        "obstacleAtlasId": "obstacle.space",
+        "hudDigitsAtlasId": "hud.digitsWhite"
+      }
+    },
+    {
+      "id": "level-19",
+      "displayNumber": 19,
+      "themeId": "space",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1],
+      "laneSpeeds": [0, 0, 10, -9, 8, -7, 6, -6, 7, -8, 9, -10, 0, 10, -9, 8, -7, 6, -6, 7, -8, 9, -10, 0, 0],
+      "trafficSpawnPercent": 50,
+      "obstaclePlacementAttempts": 40,
+      "initialTrafficRemaining": 180,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.space",
+        "playerAtlasId": "player.roosterSpace",
+        "deadPlayerAssetId": "player.roosterSpaceDead",
+        "trafficAtlasId": "traffic.ships",
+        "obstacleAtlasId": "obstacle.space",
+        "hudDigitsAtlasId": "hud.digitsWhite"
+      }
+    },
+    {
+      "id": "level-20",
+      "displayNumber": 20,
+      "themeId": "space",
+      "tileRows": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2],
+      "laneSpeeds": [0, 0, 10, -9, 10, -9, 10, -9, 10, -9, 10, -9, 0, 10, -9, 10, -9, 10, -9, 10, -9, 10, -9, 0, 12, -12, 12, -12, 12, 0],
+      "trafficSpawnPercent": 70,
+      "obstaclePlacementAttempts": 40,
+      "initialTrafficRemaining": 240,
+      "drawObstaclesAboveActors": false,
+      "assets": {
+        "backgroundAtlasId": "background.space",
+        "playerAtlasId": "player.roosterSpace",
+        "deadPlayerAssetId": "player.roosterSpaceDead",
+        "trafficAtlasId": "traffic.ships",
+        "obstacleAtlasId": "obstacle.space",
+        "hudDigitsAtlasId": "hud.digitsWhite"
+      }
     }
   ]
 }

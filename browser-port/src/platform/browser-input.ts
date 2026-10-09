@@ -13,6 +13,8 @@ export interface BrowserInputOptions {
   isMovementActive: () => boolean;
   onPauseToggle: () => void;
   onConfirm: () => void;
+  onFocusConfirm?: () => void;
+  isAnyKeyConfirmActive?: () => boolean;
 }
 
 const KEY_DIRECTIONS: Readonly<Record<string, Direction>> = {
@@ -45,6 +47,20 @@ function isTextEntry(target: EventTarget | null): boolean {
     "reset",
     "submit",
   ]).has(target.type);
+}
+
+function isUnmodifiedConfirmationKey(event: KeyboardEvent): boolean {
+  return (
+    event.key !== "Tab" &&
+    event.key !== "Shift" &&
+    event.key !== "Control" &&
+    event.key !== "Alt" &&
+    event.key !== "Meta" &&
+    !event.shiftKey &&
+    !event.ctrlKey &&
+    !event.altKey &&
+    !event.metaKey
+  );
 }
 
 export class BrowserInput {
@@ -104,6 +120,36 @@ export class BrowserInput {
   }
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
+    const ownsFocus =
+      event.target === document.body || event.target === this.options.wrapper;
+    const anyKeyConfirmActive = this.options.isAnyKeyConfirmActive?.() === true;
+    if (
+      !event.repeat &&
+      event.code === "Tab" &&
+      !event.shiftKey &&
+      !event.ctrlKey &&
+      !event.altKey &&
+      !event.metaKey &&
+      ownsFocus &&
+      anyKeyConfirmActive
+    ) {
+      event.preventDefault();
+      this.options.onFocusConfirm?.();
+      return;
+    }
+    if (
+      !event.repeat &&
+      ownsFocus &&
+      !isTextEntry(event.target) &&
+      !(event.target instanceof HTMLButtonElement) &&
+      isUnmodifiedConfirmationKey(event) &&
+      anyKeyConfirmActive
+    ) {
+      event.preventDefault();
+      this.options.onConfirm();
+      return;
+    }
+
     if ((event.code === "Escape" || event.code === "KeyP") && !event.repeat) {
       if (this.options.hasRun() && !isTextEntry(event.target)) {
         event.preventDefault();
@@ -114,9 +160,10 @@ export class BrowserInput {
 
     if (isTextEntry(event.target) || event.target instanceof HTMLButtonElement) return;
 
-    if ((event.code === "Enter" || event.code === "Space") && !event.repeat) {
-      const ownsFocus =
-        event.target === document.body || event.target === this.options.wrapper;
+    if (
+      (event.code === "Enter" || event.code === "Space" || event.code === "Digit0") &&
+      !event.repeat
+    ) {
       if (!this.options.hasRun() && ownsFocus) {
         event.preventDefault();
         this.options.onConfirm();

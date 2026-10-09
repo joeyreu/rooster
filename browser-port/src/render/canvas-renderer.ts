@@ -16,12 +16,53 @@ import type { LoadedAssets } from "./asset-loader";
 
 const LOGICAL_WIDTH = 240;
 const LOGICAL_HEIGHT = 160;
+const LEVEL_NAME_WIDTH = 215;
+const LEVEL_NAME_HEIGHT = 15;
+const NEXT_LEVEL_PROMPT_WIDTH = 207;
+const NEXT_LEVEL_PROMPT_HEIGHT = 30;
+const FINALE_STORY_WIDTH = 126;
+const FINALE_STORY_START_Y = 10;
+const FINALE_STORY_STOP_Y = -215;
+const FINALE_SCROLL_DELAY_LAST_FRAME = 60;
+const FINALE_PROMPT_WIDTH = 95;
+const FINALE_PROMPT_HEIGHT = 30;
+const RECOVERED_BLINK_PERIOD = 12;
+const RECOVERED_BLINK_VISIBLE_FROM = 4;
 
 type AtlasCollection = Readonly<Record<string, AtlasDefinition>>;
 
 interface RenderSource {
   readonly assetId: AssetId;
   readonly atlas: AtlasDefinition;
+}
+
+export interface FinaleFrameLayout {
+  readonly storyY: number;
+  readonly promptVisible: boolean;
+}
+
+/** The recovered modes increment a 0-based counter before testing 4 <= n < 12. */
+export function isNextLevelPromptVisible(frame: number, reducedMotion = false): boolean {
+  return reducedMotion || isRecoveredBlinkVisible(normalizeFrame(frame));
+}
+
+/** Deterministic version of Finale.render's 61-frame hold and one-pixel scroll. */
+export function getFinaleFrameLayout(
+  frame: number,
+  reducedMotion = false,
+): FinaleFrameLayout {
+  const normalizedFrame = normalizeFrame(frame);
+  const scrollSteps = Math.max(0, normalizedFrame - FINALE_SCROLL_DELAY_LAST_FRAME);
+  const storyY = Math.max(FINALE_STORY_STOP_Y, FINALE_STORY_START_Y - scrollSteps);
+  const firstStoppedFrame =
+    FINALE_SCROLL_DELAY_LAST_FRAME + FINALE_STORY_START_Y - FINALE_STORY_STOP_Y;
+
+  return {
+    storyY,
+    promptVisible:
+      storyY === FINALE_STORY_STOP_Y &&
+      (reducedMotion || isRecoveredBlinkVisible(normalizedFrame - firstStoppedFrame)),
+  };
 }
 
 export class CanvasRenderer {
@@ -80,6 +121,61 @@ export class CanvasRenderer {
     this.titleFrame = (this.titleFrame + 1) % 36;
     if (this.reducedMotion.matches || this.titleFrame < 24) {
       this.context.drawImage(this.asset("title.promptMask"), 146, 81);
+    }
+
+    this.present();
+  }
+
+  renderNextLevel(nextLevelNumber: number, score: number, frame: number): void {
+    const levelNumber = Math.trunc(nextLevelNumber);
+    if (levelNumber < 2 || levelNumber > 20) {
+      throw new RangeError(`Next-level screen only has recovered names for levels 2–20; got ${nextLevelNumber}.`);
+    }
+
+    this.context.drawImage(this.asset("screen.nextLevel.background"), 0, 0);
+
+    this.drawRecoveredText(String(Math.trunc(score)), 61, 83, "bold 8px sans-serif", "left");
+    this.drawRecoveredText(String(levelNumber), 220, 83, "bold 16px sans-serif", "center");
+
+    const levelNameFrame = levelNumber - 2;
+    this.context.drawImage(
+      this.asset("screen.nextLevel.levelNames"),
+      0,
+      levelNameFrame * LEVEL_NAME_HEIGHT,
+      LEVEL_NAME_WIDTH,
+      LEVEL_NAME_HEIGHT,
+      120 - Math.trunc(LEVEL_NAME_WIDTH / 2),
+      110,
+      LEVEL_NAME_WIDTH,
+      LEVEL_NAME_HEIGHT,
+    );
+
+    if (isNextLevelPromptVisible(frame, this.reducedMotion.matches)) {
+      this.context.drawImage(
+        this.asset("screen.nextLevel.prompt"),
+        120 - Math.trunc(NEXT_LEVEL_PROMPT_WIDTH / 2),
+        142 - Math.trunc(NEXT_LEVEL_PROMPT_HEIGHT / 2),
+      );
+    }
+
+    this.present();
+  }
+
+  renderFinale(frame: number): void {
+    const layout = getFinaleFrameLayout(frame, this.reducedMotion.matches);
+    this.context.drawImage(this.asset("screen.finale.background"), 0, 0);
+    this.context.drawImage(
+      this.asset("screen.finale.story"),
+      LOGICAL_WIDTH - FINALE_STORY_WIDTH,
+      layout.storyY,
+    );
+
+    if (layout.promptVisible) {
+      this.context.drawImage(
+        this.asset("screen.finale.prompt"),
+        178 - Math.trunc(FINALE_PROMPT_WIDTH / 2),
+        130 - Math.trunc(FINALE_PROMPT_HEIGHT / 2),
+      );
     }
 
     this.present();
@@ -381,6 +477,28 @@ export class CanvasRenderer {
     this.context.restore();
   }
 
+  private drawRecoveredText(
+    text: string,
+    x: number,
+    y: number,
+    font: string,
+    align: CanvasTextAlign,
+  ): void {
+    const context = this.context;
+    context.save();
+    context.font = font;
+    context.textAlign = align;
+    context.textBaseline = "middle";
+    context.fillStyle = "#770000";
+    context.fillText(text, x - 1, y - 1);
+    context.fillText(text, x + 1, y - 1);
+    context.fillText(text, x - 1, y + 1);
+    context.fillText(text, x + 1, y + 1);
+    context.fillStyle = "#fff";
+    context.fillText(text, x, y);
+    context.restore();
+  }
+
   private asset(id: AssetId): HTMLImageElement {
     const image = this.assets.get(id);
     if (image === undefined) throw new Error(`Required image ${id} was not preloaded.`);
@@ -423,6 +541,15 @@ function requiredAtlas(atlases: AtlasCollection, id: string): AtlasDefinition {
   const atlas = atlases[id];
   if (atlas === undefined) throw new Error(`Required atlas ${id} is missing.`);
   return atlas;
+}
+
+function normalizeFrame(frame: number): number {
+  return Number.isFinite(frame) ? Math.max(0, Math.trunc(frame)) : 0;
+}
+
+function isRecoveredBlinkVisible(frame: number): boolean {
+  const counter = (normalizeFrame(frame) % RECOVERED_BLINK_PERIOD) + 1;
+  return counter >= RECOVERED_BLINK_VISIBLE_FROM && counter < RECOVERED_BLINK_PERIOD;
 }
 
 function requiredAssetId(id: string): AssetId {

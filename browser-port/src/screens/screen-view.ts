@@ -12,6 +12,9 @@ export interface ResultsViewModel {
   score: number;
   bestScore: number;
   isNewBest: boolean;
+  level: number;
+  totalLevels: number;
+  campaignComplete: boolean;
 }
 
 interface ScreenButton {
@@ -91,9 +94,9 @@ export class ScreenView {
   showTitle(): void {
     this.show({
       kind: "title",
-      kicker: "Level 1 restoration",
+      kicker: "20-level restoration",
       title: "Ready to cross?",
-      copy: "Reach the top before your traffic counter runs out.",
+      copy: "Cross all five worlds before your traffic counter runs out.",
       buttons: [{ action: "start", label: "Start game", style: "primary", focus: true }],
     });
   }
@@ -113,15 +116,17 @@ export class ScreenView {
   }
 
   showResults(model: ResultsViewModel): void {
-    const outcomeTitle = model.outcome === "win" ? "Road crossed!" : "Run over";
+    const outcomeTitle = model.campaignComplete ? "Golden Rooster!" : "Run over";
     const bestCopy = model.isNewBest ? " New best score." : ` Best: ${model.bestScore}.`;
     this.show({
       kind: "results",
-      kicker: model.outcome === "win" ? "Level 1 complete" : "Game over",
+      kicker: model.campaignComplete
+        ? "All 20 levels complete"
+        : `Game over · Level ${model.level} of ${model.totalLevels}`,
       title: outcomeTitle,
       copy: `Score: ${model.score}.${bestCopy}`,
       buttons: [
-        { action: "replay", label: "Replay", style: "primary", focus: true },
+        { action: "replay", label: "New campaign", style: "primary", focus: true },
         { action: "title", label: "Title", style: "secondary" },
       ],
     });

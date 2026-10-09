@@ -1,7 +1,7 @@
 # Rooster portable game data
 
-`v1/levels.json` contains browser-independent rules and the recovered Level 1
-definition. `v1/atlases.json` describes crops by semantic asset ID; it does not
+`v1/levels.json` contains browser-independent rules and all 20 recovered level
+definitions. `v1/atlases.json` describes crops by semantic asset ID; it does not
 contain browser paths. The browser maps those IDs to immutable recovered files
 in `src/data/assets.ts`.
 
@@ -17,13 +17,16 @@ Consumers validate this aggregate object with `v1/schema.json`:
 ```
 
 The TypeScript loader performs that merge, checks references and frame bounds,
-and exports `GAME_DATA`, `LEVEL_ONE`, and the `ATLASES` lookup. Evidence for the
+and exports `GAME_DATA`, `LEVELS`, `LEVELS_BY_NUMBER`, `LEVEL_ONE`, and the
+`ATLASES` lookup. Evidence for the
 transcription is recorded in `v1/evidence.json`.
 
 Important recovered atlas details:
 
 - Background tile IDs are one-based: `tile-1` through `tile-4`.
 - Player direction groups preserve the recovered frame sequences.
+- Levels 13 and 14–16 preserve their one-pixel difference in the sixth merc
+  vehicle crop as separate atlas definitions over the same image.
 - Positive-speed vehicles use the mirrored source image; negative-speed
   vehicles use the source orientation.
 - HUD sheets are physically ordered `1,2,3,4,5,6,7,8,9,0`; frame IDs expose

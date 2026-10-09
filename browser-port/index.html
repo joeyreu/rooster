@@ -19,11 +19,12 @@
           <p class="eyebrow">Recovered BlackBerry classic</p>
           <h1 id="page-title">Rooster</h1>
         </div>
-        <p class="build-tag" aria-label="Browser port preview">Web port · Level 1</p>
+        <p class="build-tag" aria-label="Browser port preview">Web port · 20-level campaign</p>
       </header>
 
       <section class="game-card" aria-label="Rooster game">
         <div class="status-strip" aria-label="Game status">
+          <span><small>Level</small><strong id="status-level">1/20</strong></span>
           <span><small>Score</small><strong id="status-score">0</strong></span>
           <span><small>Traffic</small><strong id="status-traffic">60</strong></span>
           <span><small>Spare lives</small><strong id="status-lives">2</strong></span>
@@ -35,9 +36,10 @@
             class="game-wrapper"
             id="game-wrapper"
             tabindex="0"
-            aria-label="Rooster game scene. Cross the road and reach the top."
+            aria-labelledby="scene-title"
             aria-describedby="game-objective"
           >
+            <h2 class="visually-hidden" id="scene-title">Rooster title screen</h2>
             <canvas
               id="game-canvas"
               width="240"
@@ -105,7 +107,7 @@
       </section>
 
       <p class="status-mirror" id="status-mirror">
-        Objective: reach the top. Score 0. Two spare lives. 60 traffic remaining. Best score 0.
+        Objective: reach the top. Level 1 of 20. Score 0. Two spare lives. 60 traffic remaining. Best score 0.
       </p>
       <div class="visually-hidden" id="live-region" aria-live="polite" aria-atomic="true"></div>
     </main>

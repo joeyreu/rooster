@@ -19,7 +19,11 @@ if (atlasesDocument.version !== levelsDocument.version) {
 assertValidGameData(rawGameData);
 
 export const GAME_DATA = rawGameData;
+export const LEVELS = GAME_DATA.levels;
 export const LEVEL_ONE = GAME_DATA.levels[0]!;
+export const LEVELS_BY_NUMBER = Object.freeze(
+  Object.fromEntries(LEVELS.map((level) => [level.displayNumber, level])),
+);
 export const ATLASES = Object.freeze(
   Object.fromEntries(GAME_DATA.atlases.map((atlas) => [atlas.id, atlas])),
 );

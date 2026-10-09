@@ -150,6 +150,13 @@ export interface RngStates {
   pickups: number;
 }
 
+/** Cumulative run data carried from a completed level into the next one. */
+export interface RunContinuation {
+  score: number;
+  spareLives: number;
+  rngStates: RngStates;
+}
+
 export interface PlayerState extends Point {
   width: number;
   height: number;
@@ -280,7 +287,7 @@ export interface StepResult {
 
 export interface GameEngine {
   readonly definition: GameDefinition;
-  createRun(runSeed: number): GameState;
+  createRun(runSeed: number, continuation?: RunContinuation): GameState;
   step(state: GameState, input: InputSnapshot): StepResult;
   suspend(state: GameState, reason: SuspensionReason): StepResult;
   resume(state: GameState): StepResult;
