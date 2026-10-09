@@ -238,7 +238,7 @@ Input requirements:
 - Movement is cardinal only; simultaneous keys must never produce diagonal speed.
 - Track each keyboard key and pointer ID as a distinct active input source. If multiple directions are held, the most recently pressed source wins; releasing it falls back to the next-most-recent source still held.
 - Pointer controls must use Pointer Events and pointer capture so held input does not stick when a finger leaves the D-pad.
-- A held pointer may slide between D-pad directions without lifting. Crossing the center neutral zone or leaving the D-pad releases movement while retaining capture so re-entry can resume it.
+- A held pointer may slide between D-pad directions without lifting. A small circular center dead zone suppresses accidental activation before the first direction is engaged. Once engaged, the current direction stays latched while crossing that dead zone and switches on entering another directional sector, so crossing the center never pauses movement. Leaving the D-pad releases movement while retaining capture so directional re-entry can resume it.
 - Release a source on `keyup`, `pointerup`, `pointercancel`, `lostpointercapture`, window blur, visibility loss, or removal/disablement of its control.
 - Each touch target must be at least 44×44 CSS pixels.
 - The D-pad must be four named semantic buttons inside a group labeled “Movement controls.”
@@ -482,6 +482,7 @@ Suppress the pickup-message layer entirely while a count-zero, completion, or lo
 
 - Portrait: game scene centered above a touch D-pad and action row.
 - Landscape: game scene centered; controls may sit alongside it only if the scene remains at least 240×160 CSS pixels and safe-area insets are respected.
+- Present the D-pad as one connected physical cross. Its pressed arm and center pivot must visibly follow the currently engaged pointer direction without relying on color alone.
 - Keyboard users must be able to hide or ignore touch controls without losing Pause/Resume access.
 - Rotation or resizing must not reset the run, alter world coordinates, or consume an input.
 
@@ -845,7 +846,7 @@ Support policy at release: current and previous major desktop Chrome/Edge, Firef
 - [ ] Pause and page hiding advance the simulation by zero ticks.
 - [ ] A complete run is possible with keyboard only.
 - [ ] A complete run is possible with touch only.
-- [ ] A held D-pad pointer can slide between directions, becomes neutral in the center, and stops on release.
+- [ ] A held D-pad pointer can cross the small center dead zone without pausing, switches on entering another directional sector, and stops on release or leaving the pad.
 - [ ] Reload preserves best score and settings.
 - [ ] Replay creates a fresh seed, level, attempts, score, traffic, obstacles, and pickups.
 

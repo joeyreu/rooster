@@ -6,6 +6,8 @@ interface ActiveSource extends HeldDirection {
   sampled?: boolean;
 }
 
+type DirectionPadRegion = Direction | "deadZone" | "outside";
+
 export interface BrowserInputOptions {
   wrapper: HTMLElement;
   directionPad: HTMLElement;
@@ -217,18 +219,30 @@ export class BrowserInput {
     event.preventDefault();
     this.activePointerIds.add(event.pointerId);
     this.options.directionPad.setPointerCapture(event.pointerId);
-    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
+    this.updatePointerRegion(
+      event.pointerId,
+      this.regionAt(event.clientX, event.clientY),
+      false,
+    );
   };
 
   private readonly onPointerMove = (event: PointerEvent): void => {
     if (!this.activePointerIds.has(event.pointerId)) return;
     event.preventDefault();
-    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
+    this.updatePointerRegion(
+      event.pointerId,
+      this.regionAt(event.clientX, event.clientY),
+      true,
+    );
   };
 
   private readonly onPointerUp = (event: PointerEvent): void => {
     if (!this.activePointerIds.delete(event.pointerId)) return;
-    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
+    this.updatePointerRegion(
+      event.pointerId,
+      this.regionAt(event.clientX, event.clientY),
+      true,
+    );
     const sourceId = `pointer:${event.pointerId}`;
     const source = this.sources.get(sourceId);
     if (source?.sampled === true) {
@@ -247,6 +261,20 @@ export class BrowserInput {
     this.sources.delete(sourceId);
     this.syncPointerButtonStates();
   };
+
+  private updatePointerRegion(
+    pointerId: number,
+    region: DirectionPadRegion,
+    latchInDeadZone: boolean,
+  ): void {
+    if (region === "outside") {
+      this.updatePointerDirection(pointerId, undefined);
+    } else if (region !== "deadZone") {
+      this.updatePointerDirection(pointerId, region);
+    } else if (!latchInDeadZone) {
+      this.updatePointerDirection(pointerId, undefined);
+    }
+  }
 
   private updatePointerDirection(pointerId: number, direction: Direction | undefined): void {
     const sourceId = `pointer:${pointerId}`;
@@ -269,7 +297,7 @@ export class BrowserInput {
     this.syncPointerButtonStates();
   }
 
-  private directionAt(clientX: number, clientY: number): Direction | undefined {
+  private regionAt(clientX: number, clientY: number): DirectionPadRegion {
     const bounds = this.options.directionPad.getBoundingClientRect();
     if (
       bounds.width <= 0 ||
@@ -279,25 +307,43 @@ export class BrowserInput {
       clientY < bounds.top ||
       clientY > bounds.bottom
     ) {
-      return undefined;
+      return "outside";
     }
 
     const offsetX = clientX - (bounds.left + bounds.width / 2);
     const offsetY = clientY - (bounds.top + bounds.height / 2);
-    if (Math.abs(offsetX) <= bounds.width / 6 && Math.abs(offsetY) <= bounds.height / 6) {
-      return undefined;
+    const normalizedX = offsetX / (bounds.width / 2);
+    const normalizedY = offsetY / (bounds.height / 2);
+    if (normalizedX * normalizedX + normalizedY * normalizedY > 1) {
+      return "outside";
     }
 
-    const horizontalDistance = Math.abs(offsetX) / bounds.width;
-    const verticalDistance = Math.abs(offsetY) / bounds.height;
+    const deadZoneRadius = Math.min(bounds.width, bounds.height) * 0.09;
+    if (Math.hypot(offsetX, offsetY) <= deadZoneRadius) {
+      return "deadZone";
+    }
+
+    const horizontalDistance = Math.abs(normalizedX);
+    const verticalDistance = Math.abs(normalizedY);
     if (horizontalDistance > verticalDistance) return offsetX < 0 ? "left" : "right";
     return offsetY < 0 ? "up" : "down";
   }
 
   private syncPointerButtonStates(): void {
-    for (const button of this.options.directionButtons) button.removeAttribute("data-active");
+    let visualSource: ActiveSource | undefined;
     for (const source of this.sources.values()) {
-      source.button?.setAttribute("data-active", "true");
+      if (source.button === undefined) continue;
+      if (visualSource === undefined || source.pressedOrder >= visualSource.pressedOrder) {
+        visualSource = source;
+      }
+    }
+
+    for (const button of this.options.directionButtons) button.removeAttribute("data-active");
+    if (visualSource === undefined) {
+      delete this.options.directionPad.dataset.activeDirection;
+    } else {
+      visualSource.button?.setAttribute("data-active", "true");
+      this.options.directionPad.dataset.activeDirection = visualSource.direction;
     }
   }
 

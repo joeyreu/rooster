@@ -110,6 +110,43 @@ test("keeps D-pad arrow labels unselectable during touch gestures", async ({ pag
   });
 });
 
+test("uses a small dead zone before the first dragged direction", async ({ page }) => {
+  const game = page.locator("#game-wrapper");
+  const pad = page.locator("#direction-pad");
+  const center = page.locator(".dpad-center");
+  const up = page.getByRole("button", { name: "Move up" });
+
+  await page.getByRole("button", { name: "Start game" }).click();
+  const centerBounds = await center.boundingBox();
+  const upBounds = await up.boundingBox();
+  expect(centerBounds).not.toBeNull();
+  expect(upBounds).not.toBeNull();
+
+  const startingPosition = {
+    x: await game.getAttribute("data-player-x"),
+    y: await game.getAttribute("data-player-y"),
+  };
+  await page.mouse.move(
+    centerBounds!.x + centerBounds!.width / 2,
+    centerBounds!.y + centerBounds!.height / 2,
+  );
+  await page.mouse.down();
+  await expect(pad).not.toHaveAttribute("data-active-direction", /.+/);
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-x", startingPosition.x!);
+  await expect(game).toHaveAttribute("data-player-y", startingPosition.y!);
+
+  await page.mouse.move(
+    upBounds!.x + upBounds!.width / 2,
+    upBounds!.y + upBounds!.height / 2,
+  );
+  await expect(pad).toHaveAttribute("data-active-direction", "up");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-y"))).toBeLessThan(
+    Number(startingPosition.y),
+  );
+  await page.mouse.up();
+});
+
 test("changes held direction while dragging across the D-pad", async ({ page }) => {
   const game = page.locator("#game-wrapper");
   const up = page.getByRole("button", { name: "Move up" });
@@ -138,6 +175,7 @@ test("changes held direction while dragging across the D-pad", async ({ page }) 
   );
   await page.mouse.down();
   await expect(up).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "up");
   await expect.poll(async () => Number(await game.getAttribute("data-player-y"))).toBeLessThan(
     startingY,
   );
@@ -149,31 +187,43 @@ test("changes held direction while dragging across the D-pad", async ({ page }) 
   );
   await expect(up).not.toHaveAttribute("data-active", "true");
   await expect(right).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "right");
   await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeGreaterThan(
     rightStartingX,
   );
 
+  const centerStartingX = Number(await game.getAttribute("data-player-x"));
   await page.mouse.move(
     centerBounds!.x + centerBounds!.width / 2,
     centerBounds!.y + centerBounds!.height / 2,
   );
+  await expect(right).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "right");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeGreaterThan(
+    centerStartingX,
+  );
+
+  const crossingStartingX = Number(await game.getAttribute("data-player-x"));
+  await page.mouse.move(
+    leftBounds!.x + leftBounds!.width / 2,
+    leftBounds!.y + leftBounds!.height / 2,
+  );
   await expect(right).not.toHaveAttribute("data-active", "true");
-  await page.waitForTimeout(120);
-  const neutralPosition = {
-    x: await game.getAttribute("data-player-x"),
-    y: await game.getAttribute("data-player-y"),
-  };
-  await page.waitForTimeout(180);
-  await expect(game).toHaveAttribute("data-player-x", neutralPosition.x!);
-  await expect(game).toHaveAttribute("data-player-y", neutralPosition.y!);
+  await expect(left).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "left");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeLessThan(
+    crossingStartingX,
+  );
 
   await page.mouse.move(
     rightBounds!.x + rightBounds!.width / 2,
     rightBounds!.y + rightBounds!.height / 2,
   );
   await expect(right).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "right");
   await page.mouse.move(padBounds!.x - 8, padBounds!.y + padBounds!.height / 2);
   await expect(right).not.toHaveAttribute("data-active", "true");
+  await expect(pad).not.toHaveAttribute("data-active-direction", /.+/);
   await page.waitForTimeout(120);
   const outsidePosition = {
     x: await game.getAttribute("data-player-x"),
@@ -184,16 +234,27 @@ test("changes held direction while dragging across the D-pad", async ({ page }) 
   await expect(game).toHaveAttribute("data-player-y", outsidePosition.y!);
 
   await page.mouse.move(
+    centerBounds!.x + centerBounds!.width / 2,
+    centerBounds!.y + centerBounds!.height / 2,
+  );
+  await expect(pad).not.toHaveAttribute("data-active-direction", /.+/);
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-x", outsidePosition.x!);
+  await expect(game).toHaveAttribute("data-player-y", outsidePosition.y!);
+
+  await page.mouse.move(
     leftBounds!.x + leftBounds!.width / 2,
     leftBounds!.y + leftBounds!.height / 2,
   );
   await expect(left).toHaveAttribute("data-active", "true");
+  await expect(pad).toHaveAttribute("data-active-direction", "left");
   await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeLessThan(
-    Number(neutralPosition.x),
+    Number(outsidePosition.x),
   );
 
   await page.mouse.up();
   await expect(left).not.toHaveAttribute("data-active", "true");
+  await expect(pad).not.toHaveAttribute("data-active-direction", /.+/);
   await page.waitForTimeout(120);
   const releasedPosition = {
     x: await game.getAttribute("data-player-x"),
