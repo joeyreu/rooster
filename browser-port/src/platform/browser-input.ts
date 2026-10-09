@@ -8,6 +8,7 @@ interface ActiveSource extends HeldDirection {
 
 export interface BrowserInputOptions {
   wrapper: HTMLElement;
+  directionPad: HTMLElement;
   directionButtons: readonly HTMLButtonElement[];
   hasRun: () => boolean;
   isMovementActive: () => boolean;
@@ -65,19 +66,24 @@ function isUnmodifiedConfirmationKey(event: KeyboardEvent): boolean {
 
 export class BrowserInput {
   private readonly sources = new Map<string, ActiveSource>();
+  private readonly activePointerIds = new Set<number>();
+  private readonly buttonsByDirection = new Map<Direction, HTMLButtonElement>();
   private order = 0;
 
   constructor(private readonly options: BrowserInputOptions) {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
     window.addEventListener("blur", this.clear);
+    options.directionPad.addEventListener("pointerdown", this.onPointerDown);
+    options.directionPad.addEventListener("pointermove", this.onPointerMove);
+    options.directionPad.addEventListener("pointerup", this.onPointerUp);
+    options.directionPad.addEventListener("pointercancel", this.onPointerCancel);
+    options.directionPad.addEventListener("lostpointercapture", this.onPointerCancel);
+    options.directionPad.addEventListener("contextmenu", this.preventContextMenu);
     for (const button of options.directionButtons) {
-      button.addEventListener("pointerdown", this.onPointerDown);
-      button.addEventListener("pointerup", this.onPointerUp);
-      button.addEventListener("pointercancel", this.onPointerCancel);
-      button.addEventListener("lostpointercapture", this.onPointerCancel);
+      const direction = button.dataset.direction as Direction | undefined;
+      if (direction !== undefined) this.buttonsByDirection.set(direction, button);
       button.addEventListener("click", this.onButtonClick);
-      button.addEventListener("contextmenu", this.preventContextMenu);
     }
   }
 
@@ -100,8 +106,15 @@ export class BrowserInput {
   }
 
   readonly clear = (): void => {
-    for (const source of this.sources.values()) source.button?.removeAttribute("data-active");
+    const capturedPointers = [...this.activePointerIds];
+    this.activePointerIds.clear();
     this.sources.clear();
+    this.syncPointerButtonStates();
+    for (const pointerId of capturedPointers) {
+      if (this.options.directionPad.hasPointerCapture(pointerId)) {
+        this.options.directionPad.releasePointerCapture(pointerId);
+      }
+    }
   };
 
   destroy(): void {
@@ -109,13 +122,14 @@ export class BrowserInput {
     window.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.clear);
+    this.options.directionPad.removeEventListener("pointerdown", this.onPointerDown);
+    this.options.directionPad.removeEventListener("pointermove", this.onPointerMove);
+    this.options.directionPad.removeEventListener("pointerup", this.onPointerUp);
+    this.options.directionPad.removeEventListener("pointercancel", this.onPointerCancel);
+    this.options.directionPad.removeEventListener("lostpointercapture", this.onPointerCancel);
+    this.options.directionPad.removeEventListener("contextmenu", this.preventContextMenu);
     for (const button of this.options.directionButtons) {
-      button.removeEventListener("pointerdown", this.onPointerDown);
-      button.removeEventListener("pointerup", this.onPointerUp);
-      button.removeEventListener("pointercancel", this.onPointerCancel);
-      button.removeEventListener("lostpointercapture", this.onPointerCancel);
       button.removeEventListener("click", this.onButtonClick);
-      button.removeEventListener("contextmenu", this.preventContextMenu);
     }
   }
 
@@ -198,43 +212,94 @@ export class BrowserInput {
   };
 
   private readonly onPointerDown = (event: PointerEvent): void => {
-    if (!this.options.isMovementActive()) return;
-    const button = event.currentTarget as HTMLButtonElement;
-    const direction = button.dataset.direction as Direction | undefined;
-    if (direction === undefined) return;
+    if (event.button !== 0 || !this.options.isMovementActive()) return;
 
     event.preventDefault();
-    button.setPointerCapture(event.pointerId);
-    button.dataset.active = "true";
-    this.sources.set(`pointer:${event.pointerId}`, {
-      sourceId: `pointer:${event.pointerId}`,
-      direction,
-      pressedOrder: ++this.order,
-      button,
-      sampled: false,
-    });
+    this.activePointerIds.add(event.pointerId);
+    this.options.directionPad.setPointerCapture(event.pointerId);
+    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
+  };
+
+  private readonly onPointerMove = (event: PointerEvent): void => {
+    if (!this.activePointerIds.has(event.pointerId)) return;
+    event.preventDefault();
+    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
   };
 
   private readonly onPointerUp = (event: PointerEvent): void => {
+    if (!this.activePointerIds.delete(event.pointerId)) return;
+    this.updatePointerDirection(event.pointerId, this.directionAt(event.clientX, event.clientY));
     const sourceId = `pointer:${event.pointerId}`;
     const source = this.sources.get(sourceId);
-    source?.button?.removeAttribute("data-active");
     if (source?.sampled === true) {
       this.sources.delete(sourceId);
     } else if (source !== undefined) {
       delete source.button;
       source.oneShot = true;
     }
+    this.syncPointerButtonStates();
     if (this.options.isMovementActive()) this.options.wrapper.focus({ preventScroll: true });
   };
 
   private readonly onPointerCancel = (event: PointerEvent): void => {
+    if (!this.activePointerIds.delete(event.pointerId)) return;
     const sourceId = `pointer:${event.pointerId}`;
-    const source = this.sources.get(sourceId);
-    if (source?.oneShot === true) return;
-    source?.button?.removeAttribute("data-active");
     this.sources.delete(sourceId);
+    this.syncPointerButtonStates();
   };
+
+  private updatePointerDirection(pointerId: number, direction: Direction | undefined): void {
+    const sourceId = `pointer:${pointerId}`;
+    const source = this.sources.get(sourceId);
+    if (source !== undefined && source.direction === direction && source.oneShot !== true) return;
+
+    if (direction === undefined) {
+      this.sources.delete(sourceId);
+    } else {
+      const button = this.buttonsByDirection.get(direction);
+      if (button === undefined) throw new Error(`Missing D-pad button for ${direction}.`);
+      this.sources.set(sourceId, {
+        sourceId,
+        direction,
+        pressedOrder: ++this.order,
+        button,
+        sampled: false,
+      });
+    }
+    this.syncPointerButtonStates();
+  }
+
+  private directionAt(clientX: number, clientY: number): Direction | undefined {
+    const bounds = this.options.directionPad.getBoundingClientRect();
+    if (
+      bounds.width <= 0 ||
+      bounds.height <= 0 ||
+      clientX < bounds.left ||
+      clientX > bounds.right ||
+      clientY < bounds.top ||
+      clientY > bounds.bottom
+    ) {
+      return undefined;
+    }
+
+    const offsetX = clientX - (bounds.left + bounds.width / 2);
+    const offsetY = clientY - (bounds.top + bounds.height / 2);
+    if (Math.abs(offsetX) <= bounds.width / 6 && Math.abs(offsetY) <= bounds.height / 6) {
+      return undefined;
+    }
+
+    const horizontalDistance = Math.abs(offsetX) / bounds.width;
+    const verticalDistance = Math.abs(offsetY) / bounds.height;
+    if (horizontalDistance > verticalDistance) return offsetX < 0 ? "left" : "right";
+    return offsetY < 0 ? "up" : "down";
+  }
+
+  private syncPointerButtonStates(): void {
+    for (const button of this.options.directionButtons) button.removeAttribute("data-active");
+    for (const source of this.sources.values()) {
+      source.button?.setAttribute("data-active", "true");
+    }
+  }
 
   private readonly onButtonClick = (event: MouseEvent): void => {
     if (event.detail !== 0 || !this.options.isMovementActive()) return;

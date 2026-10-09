@@ -91,6 +91,179 @@ test("offers semantic touch controls without covering the scene", async ({ page 
   await expect(game).toHaveAttribute("data-player-y", String(pointerStartingY - 2));
 });
 
+test("changes held direction while dragging across the D-pad", async ({ page }) => {
+  const game = page.locator("#game-wrapper");
+  const up = page.getByRole("button", { name: "Move up" });
+  const right = page.getByRole("button", { name: "Move right" });
+  const left = page.getByRole("button", { name: "Move left" });
+  const pad = page.locator("#direction-pad");
+  const center = page.locator(".dpad-center");
+
+  await page.getByRole("button", { name: "Start game" }).click();
+
+  const upBounds = await up.boundingBox();
+  const rightBounds = await right.boundingBox();
+  const leftBounds = await left.boundingBox();
+  const padBounds = await pad.boundingBox();
+  const centerBounds = await center.boundingBox();
+  expect(upBounds).not.toBeNull();
+  expect(rightBounds).not.toBeNull();
+  expect(leftBounds).not.toBeNull();
+  expect(padBounds).not.toBeNull();
+  expect(centerBounds).not.toBeNull();
+
+  const startingY = Number(await game.getAttribute("data-player-y"));
+  await page.mouse.move(
+    upBounds!.x + upBounds!.width / 2,
+    upBounds!.y + upBounds!.height / 2,
+  );
+  await page.mouse.down();
+  await expect(up).toHaveAttribute("data-active", "true");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-y"))).toBeLessThan(
+    startingY,
+  );
+
+  const rightStartingX = Number(await game.getAttribute("data-player-x"));
+  await page.mouse.move(
+    rightBounds!.x + rightBounds!.width / 2,
+    rightBounds!.y + rightBounds!.height / 2,
+  );
+  await expect(up).not.toHaveAttribute("data-active", "true");
+  await expect(right).toHaveAttribute("data-active", "true");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeGreaterThan(
+    rightStartingX,
+  );
+
+  await page.mouse.move(
+    centerBounds!.x + centerBounds!.width / 2,
+    centerBounds!.y + centerBounds!.height / 2,
+  );
+  await expect(right).not.toHaveAttribute("data-active", "true");
+  await page.waitForTimeout(120);
+  const neutralPosition = {
+    x: await game.getAttribute("data-player-x"),
+    y: await game.getAttribute("data-player-y"),
+  };
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-x", neutralPosition.x!);
+  await expect(game).toHaveAttribute("data-player-y", neutralPosition.y!);
+
+  await page.mouse.move(
+    rightBounds!.x + rightBounds!.width / 2,
+    rightBounds!.y + rightBounds!.height / 2,
+  );
+  await expect(right).toHaveAttribute("data-active", "true");
+  await page.mouse.move(padBounds!.x - 8, padBounds!.y + padBounds!.height / 2);
+  await expect(right).not.toHaveAttribute("data-active", "true");
+  await page.waitForTimeout(120);
+  const outsidePosition = {
+    x: await game.getAttribute("data-player-x"),
+    y: await game.getAttribute("data-player-y"),
+  };
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-x", outsidePosition.x!);
+  await expect(game).toHaveAttribute("data-player-y", outsidePosition.y!);
+
+  await page.mouse.move(
+    leftBounds!.x + leftBounds!.width / 2,
+    leftBounds!.y + leftBounds!.height / 2,
+  );
+  await expect(left).toHaveAttribute("data-active", "true");
+  await expect.poll(async () => Number(await game.getAttribute("data-player-x"))).toBeLessThan(
+    Number(neutralPosition.x),
+  );
+
+  await page.mouse.up();
+  await expect(left).not.toHaveAttribute("data-active", "true");
+  await page.waitForTimeout(120);
+  const releasedPosition = {
+    x: await game.getAttribute("data-player-x"),
+    y: await game.getAttribute("data-player-y"),
+  };
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-x", releasedPosition.x!);
+  await expect(game).toHaveAttribute("data-player-y", releasedPosition.y!);
+});
+
+test("stops D-pad movement when pointer capture is lost", async ({ page }) => {
+  const game = page.locator("#game-wrapper");
+  const pad = page.locator("#direction-pad");
+  const up = page.getByRole("button", { name: "Move up" });
+
+  await page.getByRole("button", { name: "Start game" }).click();
+  await pad.evaluate((element) => {
+    element.addEventListener(
+      "pointerdown",
+      (event) => {
+        element.setAttribute("data-test-pointer-id", String((event as PointerEvent).pointerId));
+      },
+      { once: true },
+    );
+  });
+
+  const upBounds = await up.boundingBox();
+  expect(upBounds).not.toBeNull();
+  const startingY = Number(await game.getAttribute("data-player-y"));
+  await page.mouse.move(
+    upBounds!.x + upBounds!.width / 2,
+    upBounds!.y + upBounds!.height / 2,
+  );
+  await page.mouse.down();
+  await expect.poll(async () => Number(await game.getAttribute("data-player-y"))).toBeLessThan(
+    startingY,
+  );
+
+  await pad.evaluate((element) => {
+    const pointerId = Number(element.getAttribute("data-test-pointer-id"));
+    element.releasePointerCapture(pointerId);
+  });
+  await expect(up).not.toHaveAttribute("data-active", "true");
+  await page.waitForTimeout(120);
+  const cancelledY = await game.getAttribute("data-player-y");
+  await page.waitForTimeout(180);
+  await expect(game).toHaveAttribute("data-player-y", cancelledY!);
+  await page.mouse.up();
+});
+
+test("clears a captured D-pad gesture when movement becomes disabled", async ({ page }) => {
+  const game = page.locator("#game-wrapper");
+  const up = page.getByRole("button", { name: "Move up" });
+  const right = page.getByRole("button", { name: "Move right" });
+
+  await page.getByRole("button", { name: "Start game" }).click();
+  const upBounds = await up.boundingBox();
+  const rightBounds = await right.boundingBox();
+  expect(upBounds).not.toBeNull();
+  expect(rightBounds).not.toBeNull();
+
+  await page.mouse.move(
+    upBounds!.x + upBounds!.width / 2,
+    upBounds!.y + upBounds!.height / 2,
+  );
+  await page.mouse.down();
+  await expect(up).toHaveAttribute("data-active", "true");
+
+  await page.evaluate(() => {
+    const playtest = (
+      window as Window & {
+        __ROOSTER_PLAYTEST__?: { completeLevel(): unknown };
+      }
+    ).__ROOSTER_PLAYTEST__;
+    if (playtest === undefined) throw new Error("Missing Rooster playtest API.");
+    playtest.completeLevel();
+  });
+
+  await expect(game).toHaveAttribute("data-route", "nextLevel");
+  await expect(up).toBeDisabled();
+  await expect(up).not.toHaveAttribute("data-active", "true");
+  await page.mouse.move(
+    rightBounds!.x + rightBounds!.width / 2,
+    rightBounds!.y + rightBounds!.height / 2,
+  );
+  await expect(right).not.toHaveAttribute("data-active", "true");
+  await page.mouse.up();
+});
+
 test("keeps every game control inside a 280px viewport", async ({ page }) => {
   await page.setViewportSize({ width: 280, height: 800 });
   await page.reload();

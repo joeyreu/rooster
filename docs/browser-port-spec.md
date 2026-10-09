@@ -222,10 +222,10 @@ stateDiagram-v2
 | Action | Keyboard | Touch/pointer |
 |---|---|---|
 | Start/confirm | Enter or Space | Start button or scene tap |
-| Move up | Arrow Up or W | Hold D-pad Up |
-| Move right | Arrow Right or D | Hold D-pad Right |
-| Move down | Arrow Down or S | Hold D-pad Down |
-| Move left | Arrow Left or A | Hold D-pad Left |
+| Move up | Arrow Up or W | Hold or slide to D-pad Up |
+| Move right | Arrow Right or D | Hold or slide to D-pad Right |
+| Move down | Arrow Down or S | Hold or slide to D-pad Down |
+| Move left | Arrow Left or A | Hold or slide to D-pad Left |
 | Pause/resume | Escape or P | Pause/Resume button |
 | Replay/confirm | Enter or Space | Labeled button |
 | Back/cancel | Escape | Labeled Back/Title button |
@@ -237,11 +237,12 @@ Input requirements:
 - Movement continues while a direction is held.
 - Movement is cardinal only; simultaneous keys must never produce diagonal speed.
 - Track each keyboard key and pointer ID as a distinct active input source. If multiple directions are held, the most recently pressed source wins; releasing it falls back to the next-most-recent source still held.
-- Pointer controls must use Pointer Events and pointer capture so held input does not stick when a finger leaves a button.
+- Pointer controls must use Pointer Events and pointer capture so held input does not stick when a finger leaves the D-pad.
+- A held pointer may slide between D-pad directions without lifting. Crossing the center neutral zone or leaving the D-pad releases movement while retaining capture so re-entry can resume it.
 - Release a source on `keyup`, `pointerup`, `pointercancel`, `lostpointercapture`, window blur, visibility loss, or removal/disablement of its control.
 - Each touch target must be at least 44×44 CSS pixels.
 - The D-pad must be four named semantic buttons inside a group labeled “Movement controls.”
-- Use `touch-action: none` only on the D-pad buttons and other controls that require held pointer input.
+- Use `touch-action: none` only on the D-pad surface and other controls that require held pointer input.
 - Keyboard capture is active only while the run route owns focus and the event target is not a form control. Prevent default browser behavior only for mapped game keys in that state.
 - The game wrapper must have `tabindex="0"`. Start, Replay, confirmed New Game, and Resume move focus to it before simulation begins.
 - Escape/P pause and resume globally while a run exists unless focus is inside a text-entry control. They must work when a Pause-menu button owns focus.
@@ -844,6 +845,7 @@ Support policy at release: current and previous major desktop Chrome/Edge, Firef
 - [ ] Pause and page hiding advance the simulation by zero ticks.
 - [ ] A complete run is possible with keyboard only.
 - [ ] A complete run is possible with touch only.
+- [ ] A held D-pad pointer can slide between directions, becomes neutral in the center, and stops on release.
 - [ ] Reload preserves best score and settings.
 - [ ] Replay creates a fresh seed, level, attempts, score, traffic, obstacles, and pickups.
 

@@ -82,6 +82,7 @@ const pauseButton = requiredElement("pause-button", HTMLButtonElement);
 const controls = requiredElement("game-controls");
 const vibrationToggle = requiredElement("vibration-toggle", HTMLInputElement);
 const confirmDialog = requiredElement("confirm-dialog", HTMLDialogElement);
+const directionPad = requiredElement("direction-pad");
 const directionButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-direction]")];
 
 const saveStore = new BrowserSaveStore();
@@ -104,6 +105,7 @@ let screenFrame = 0;
 const screenView = new ScreenView(handleScreenAction);
 const input = new BrowserInput({
   wrapper: gameWrapper,
+  directionPad,
   directionButtons,
   hasRun: () => hasRun() && !confirmDialog.open,
   isMovementActive: () => isMovementActive(),
@@ -325,6 +327,7 @@ function dispatchEvents(events: readonly GameEvent[]): void {
         announcements.push("Back on the road.");
         break;
       case "levelCompleted":
+        input.clear();
         announcements.push(`Level ${currentLevelNumber()} completed.`);
         break;
       case "scoreFinalized":
