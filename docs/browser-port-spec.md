@@ -449,8 +449,10 @@ Dying completes after 15 subsequent elapsed ticks. LevelComplete and GameOver co
 
 - Render the game into a 240×160 logical buffer.
 - Present it at a 3:2 aspect ratio, centered with letterboxing as needed.
-- Prefer the largest integer scale that fits the available region.
-- On a screen smaller than 240×160 CSS pixels, allow a fractional fit rather than cropping.
+- Prefer integer scaling when it does not leave substantial playable width unused.
+- On narrow portrait screens, allow a fractional fit that fills the available width rather
+  than holding the canvas to 240 CSS pixels or cropping it. Preserve the compact integer
+  scale in narrow, short landscape layouts so touch controls remain reachable.
 - Disable image smoothing for every relevant 2D context.
 - Use `image-rendering: pixelated` on the presentation canvas.
 - Account for device pixel ratio without changing logical coordinates.

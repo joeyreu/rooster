@@ -182,7 +182,7 @@ h1 {
   display: grid;
   place-items: center;
   box-sizing: content-box;
-  width: 15rem;
+  width: 30rem;
   max-width: calc(100% - 2px);
   aspect-ratio: 3 / 2;
   margin-inline: auto;
@@ -195,12 +195,6 @@ h1 {
     0 0 0 0.42rem rgba(255, 255, 255, 0.12),
     0 1rem 2.6rem rgba(0, 0, 0, 0.45);
   isolation: isolate;
-}
-
-@media (min-width: 35rem) {
-  .game-wrapper {
-    width: 30rem;
-  }
 }
 
 #game-canvas {
@@ -590,6 +584,12 @@ button:not(:disabled):active {
 
   .controls {
     min-height: 0;
+  }
+}
+
+@media (max-width: 34.99rem) and (max-height: 31rem) and (orientation: landscape) {
+  .game-wrapper {
+    width: 15rem;
   }
 }
 

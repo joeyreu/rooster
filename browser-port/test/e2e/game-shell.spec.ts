@@ -105,6 +105,47 @@ test("keeps every game control inside a 280px viewport", async ({ page }) => {
   }
 });
 
+test("fills the available game width on a narrow portrait screen", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+
+  const dimensions = await page.evaluate(() => {
+    const canvas = document.querySelector<HTMLCanvasElement>("#game-canvas")!;
+    const layout = document.querySelector<HTMLElement>(".play-layout")!;
+    const canvasBounds = canvas.getBoundingClientRect();
+    const layoutStyle = getComputedStyle(layout);
+    const availableWidth =
+      layout.clientWidth -
+      Number.parseFloat(layoutStyle.paddingLeft) -
+      Number.parseFloat(layoutStyle.paddingRight);
+    return {
+      availableWidth,
+      canvasHeight: canvasBounds.height,
+      canvasWidth: canvasBounds.width,
+      documentWidth: document.documentElement.scrollWidth,
+    };
+  });
+
+  expect(dimensions.canvasWidth).toBeGreaterThan(dimensions.availableWidth - 3);
+  expect(dimensions.canvasWidth / dimensions.canvasHeight).toBeCloseTo(1.5, 2);
+  expect(dimensions.documentWidth).toBeLessThanOrEqual(390);
+});
+
+test("keeps the scene compact on a narrow, short landscape screen", async ({ page }) => {
+  await page.setViewportSize({ width: 540, height: 320 });
+  await page.reload();
+  await page.getByRole("button", { name: "Start game" }).click();
+
+  const scene = await page.locator("#game-canvas").boundingBox();
+  const firstDirection = await page
+    .getByRole("button", { name: "Move up" })
+    .boundingBox();
+  expect(scene).not.toBeNull();
+  expect(firstDirection).not.toBeNull();
+  expect(scene!.width).toBeLessThanOrEqual(240);
+  expect(firstDirection!.y).toBeLessThan(320);
+});
+
 test("keeps controls reachable in short landscape", async ({ page }) => {
   await page.getByRole("button", { name: "Start game" }).click();
   await page.setViewportSize({ width: 568, height: 320 });
