@@ -358,6 +358,17 @@ button:not(:disabled):active {
   touch-action: none;
 }
 
+.control-button,
+.control-button > span {
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+.control-button > span {
+  pointer-events: none;
+}
+
 .control-button[data-active="true"] {
   color: #161005;
   background: var(--signal);

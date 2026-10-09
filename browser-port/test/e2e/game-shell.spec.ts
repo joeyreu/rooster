@@ -91,6 +91,25 @@ test("offers semantic touch controls without covering the scene", async ({ page 
   await expect(game).toHaveAttribute("data-player-y", String(pointerStartingY - 2));
 });
 
+test("keeps D-pad arrow labels unselectable during touch gestures", async ({ page }) => {
+  const styles = await page.getByRole("button", { name: "Move up" }).evaluate((button) => {
+    const glyph = button.querySelector("span")!;
+    const buttonStyle = getComputedStyle(button);
+    const glyphStyle = getComputedStyle(glyph);
+    return {
+      buttonUserSelect: buttonStyle.userSelect,
+      glyphPointerEvents: glyphStyle.pointerEvents,
+      glyphUserSelect: glyphStyle.userSelect,
+    };
+  });
+
+  expect(styles).toEqual({
+    buttonUserSelect: "none",
+    glyphPointerEvents: "none",
+    glyphUserSelect: "none",
+  });
+});
+
 test("changes held direction while dragging across the D-pad", async ({ page }) => {
   const game = page.locator("#game-wrapper");
   const up = page.getByRole("button", { name: "Move up" });
